@@ -1,172 +1,209 @@
 const products = [
+
     {
         id: 1,
         name: "EA Sports FC 26",
         category: "Games",
         price: 8900,
         icon: "⚽",
-        description: "The ultimate football gaming experience."
+        tag: "HOT"
     },
 
     {
         id: 2,
-        name: "Minecraft Java & Bedrock",
-        category: "Games",
-        price: 8400,
-        icon: "⛏️",
-        description: "Build, explore and survive your own world."
-    },
-
-    {
-        id: 3,
         name: "Steam Wallet 20€",
         category: "Gift Cards",
         price: 4200,
         icon: "🎮",
-        description: "Add funds to your Steam account instantly."
+        tag: "-20%"
     },
 
     {
-        id: 4,
-        name: "PlayStation Gift Card",
-        category: "Gift Cards",
-        price: 5000,
-        icon: "🕹️",
-        description: "Shop games and digital content on PlayStation."
-    },
-
-    {
-        id: 5,
+        id: 3,
         name: "PlayStation Plus",
         category: "Memberships",
         price: 7600,
         icon: "⭐",
-        description: "Unlock online multiplayer and monthly games."
+        tag: "TOP"
     },
 
     {
-        id: 6,
+        id: 4,
         name: "Game Pass Ultimate",
         category: "Memberships",
         price: 6900,
         icon: "🎯",
-        description: "Access a huge library of amazing games."
+        tag: "NEW"
     },
 
     {
-        id: 7,
+        id: 5,
         name: "Valorant Points 2050",
         category: "Points",
         price: 5100,
         icon: "💎",
-        description: "Get Valorant Points for your account."
+        tag: "NEW"
     },
 
     {
-        id: 8,
+        id: 6,
+        name: "Minecraft Java & Bedrock",
+        category: "Games",
+        price: 8400,
+        icon: "⛏️",
+        tag: "HOT"
+    },
+
+    {
+        id: 7,
         name: "Discord Nitro",
         category: "Memberships",
         price: 3500,
         icon: "💬",
-        description: "Upgrade your Discord experience with Nitro."
+        tag: "NEW"
+    },
+
+    {
+        id: 8,
+        name: "PlayStation Gift Card",
+        category: "Gift Cards",
+        price: 5000,
+        icon: "🕹️",
+        tag: "TOP"
     }
+
 ];
 
 
-let cart = JSON.parse(localStorage.getItem("shadowCart")) || [];
+let cart =
+    JSON.parse(
+        localStorage.getItem("shadowCart")
+    ) || [];
+
 
 let currentFilter = "All";
-let searchTerm = "";
+
+let searchQuery = "";
 
 
-const productsGrid = document.getElementById("productsGrid");
-const emptyProducts = document.getElementById("emptyProducts");
+const grid =
+    document.getElementById("grid");
 
-const searchInput = document.getElementById("searchInput");
+const noResults =
+    document.getElementById("none");
 
-const cartPanel = document.getElementById("cartPanel");
-const overlay = document.getElementById("overlay");
+const search =
+    document.getElementById("search");
 
-const cartItems = document.getElementById("cartItems");
-const cartEmpty = document.getElementById("cartEmpty");
+const cartPanel =
+    document.getElementById("cart");
 
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
+const overlay =
+    document.getElementById("overlay");
 
-const checkoutButton = document.getElementById("checkoutButton");
+const cartItems =
+    document.getElementById("items");
 
-const toast = document.getElementById("toast");
+const cartEmpty =
+    document.getElementById("empty");
+
+const cartCount =
+    document.getElementById("count");
+
+const cartTotal =
+    document.getElementById("total");
+
+const checkout =
+    document.getElementById("checkout");
+
+const toastElement =
+    document.getElementById("toast");
 
 
-/* Format price */
+function money(price) {
 
-function formatPrice(price) {
-    return price.toLocaleString("en-US") + " DA";
+    return price.toLocaleString("en-US")
+        + " DA";
+
 }
 
-
-/* Save cart */
 
 function saveCart() {
-    localStorage.setItem("shadowCart", JSON.stringify(cart));
+
+    localStorage.setItem(
+        "shadowCart",
+        JSON.stringify(cart)
+    );
+
 }
 
-
-/* Render products */
 
 function renderProducts() {
 
-    const filteredProducts = products.filter(product => {
+    const filtered =
+        products.filter(product => {
 
-        const matchesCategory =
-            currentFilter === "All" ||
-            product.category === currentFilter;
+            const categoryMatch =
+                currentFilter === "All" ||
+                product.category === currentFilter;
 
-        const matchesSearch =
-            product.name
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase());
+            const searchMatch =
+                product.name
+                    .toLowerCase()
+                    .includes(
+                        searchQuery.toLowerCase()
+                    );
 
-        return matchesCategory && matchesSearch;
-    });
+            return categoryMatch &&
+                searchMatch;
+
+        });
 
 
-    productsGrid.innerHTML = "";
+    grid.innerHTML = "";
 
 
-    filteredProducts.forEach(product => {
+    filtered.forEach(product => {
 
-        const card = document.createElement("article");
+        const card =
+            document.createElement("article");
 
-        card.className = "product-card";
+
+        card.className = "product";
+
 
         card.innerHTML = `
+
+            <em>
+                ${product.tag}
+            </em>
+
             <div class="product-image">
                 ${product.icon}
             </div>
 
-            <div class="product-info">
+            <div class="product-body">
 
-                <span class="product-category">
+                <small>
                     ${product.category}
-                </span>
+                </small>
 
-                <h3 class="product-title">
+                <h3>
                     ${product.name}
                 </h3>
 
-                <p class="product-description">
-                    ${product.description}
+                <p>
+                    Premium digital gaming product.
                 </p>
 
                 <div class="product-bottom">
 
-                    <strong class="product-price">
-                        ${formatPrice(product.price)}
+                    <strong class="price">
+                        ${money(product.price)}
                     </strong>
 
                     <button
-                        class="add-button"
+                        class="add"
                         onclick="addToCart(${product.id})"
                     >
                         Add to Cart
@@ -175,92 +212,97 @@ function renderProducts() {
                 </div>
 
             </div>
+
         `;
 
-        productsGrid.appendChild(card);
+
+        grid.appendChild(card);
+
     });
 
 
-    if (filteredProducts.length === 0) {
-        emptyProducts.classList.add("show");
-    } else {
-        emptyProducts.classList.remove("show");
-    }
+    noResults.style.display =
+        filtered.length
+            ? "none"
+            : "block";
+
 }
 
 
-/* Add product */
+function addToCart(id) {
 
-function addToCart(productId) {
-
-    const product = products.find(
-        item => item.id === productId
-    );
-
-    if (!product) return;
+    const product =
+        products.find(
+            item => item.id === id
+        );
 
 
-    const existingItem = cart.find(
-        item => item.id === productId
-    );
+    const existing =
+        cart.find(
+            item => item.id === id
+        );
 
 
-    if (existingItem) {
-        existingItem.quantity++;
+    if (existing) {
+
+        existing.quantity++;
+
     } else {
+
         cart.push({
+
             ...product,
+
             quantity: 1
+
         });
+
     }
 
 
     saveCart();
+
     renderCart();
 
-    showToast(`${product.name} added to cart!`);
+    showToast(
+        product.name +
+        " added to cart!"
+    );
+
 }
 
 
-/* Remove product */
+function changeQuantity(id, amount) {
 
-function removeFromCart(productId) {
+    const item =
+        cart.find(
+            product => product.id === id
+        );
 
-    cart = cart.filter(
-        item => item.id !== productId
-    );
-
-    saveCart();
-    renderCart();
-}
-
-
-/* Change quantity */
-
-function changeQuantity(productId, change) {
-
-    const item = cart.find(
-        item => item.id === productId
-    );
 
     if (!item) return;
 
 
-    item.quantity += change;
+    item.quantity += amount;
 
 
     if (item.quantity <= 0) {
-        removeFromCart(productId);
-        return;
+
+        cart =
+            cart.filter(
+                product =>
+                    product.id !== id
+            );
+
     }
 
 
     saveCart();
+
     renderCart();
+
 }
 
-
-/* Render cart */
 
 function renderCart() {
 
@@ -269,25 +311,26 @@ function renderCart() {
 
     if (cart.length === 0) {
 
-        cartEmpty.classList.add("show");
-        cartItems.style.display = "none";
+        cartEmpty.style.display = "flex";
 
     } else {
 
-        cartEmpty.classList.remove("show");
-        cartItems.style.display = "block";
+        cartEmpty.style.display = "none";
 
 
         cart.forEach(item => {
 
-            const cartItem = document.createElement("div");
+            const element =
+                document.createElement("div");
 
-            cartItem.className = "cart-item";
+
+            element.className =
+                "cart-item";
 
 
-            cartItem.innerHTML = `
+            element.innerHTML = `
 
-                <div class="cart-item-image">
+                <div class="cart-icon">
                     ${item.icon}
                 </div>
 
@@ -298,13 +341,16 @@ function renderCart() {
                     </h4>
 
                     <div class="cart-item-price">
-                        ${formatPrice(item.price)}
+                        ${money(item.price)}
                     </div>
 
                     <div class="quantity">
 
                         <button
-                            onclick="changeQuantity(${item.id}, -1)"
+                            onclick="changeQuantity(
+                                ${item.id},
+                                -1
+                            )"
                         >
                             −
                         </button>
@@ -314,7 +360,10 @@ function renderCart() {
                         </span>
 
                         <button
-                            onclick="changeQuantity(${item.id}, 1)"
+                            onclick="changeQuantity(
+                                ${item.id},
+                                1
+                            )"
                         >
                             +
                         </button>
@@ -324,9 +373,11 @@ function renderCart() {
                 </div>
 
                 <button
-                    class="remove-item"
-                    onclick="removeFromCart(${item.id})"
-                    title="Remove"
+                    class="remove"
+                    onclick="changeQuantity(
+                        ${item.id},
+                        -999
+                    )"
                 >
                     ×
                 </button>
@@ -334,167 +385,189 @@ function renderCart() {
             `;
 
 
-            cartItems.appendChild(cartItem);
+            cartItems.appendChild(
+                element
+            );
+
         });
+
     }
 
 
-    const totalQuantity = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
+    const quantity =
+        cart.reduce(
+            (sum, item) =>
+                sum + item.quantity,
+            0
+        );
 
 
-    const totalPrice = cart.reduce(
-        (total, item) =>
-            total + item.price * item.quantity,
-        0
-    );
+    const total =
+        cart.reduce(
+            (sum, item) =>
+                sum +
+                item.price *
+                item.quantity,
+            0
+        );
 
 
-    cartCount.textContent = totalQuantity;
-    cartTotal.textContent = formatPrice(totalPrice);
+    cartCount.textContent =
+        quantity;
 
-    checkoutButton.disabled = cart.length === 0;
+
+    cartTotal.textContent =
+        money(total);
+
+
+    checkout.disabled =
+        cart.length === 0;
+
 }
 
-
-/* Open cart */
-
-function openCart() {
-
-    cartPanel.classList.add("active");
-    overlay.classList.add("active");
-
-    document.body.style.overflow = "hidden";
-}
-
-
-/* Close cart */
-
-function closeCart() {
-
-    cartPanel.classList.remove("active");
-    overlay.classList.remove("active");
-
-    document.body.style.overflow = "";
-}
-
-
-/* Toast */
 
 function showToast(message) {
 
-    toast.textContent = message;
+    toastElement.textContent =
+        message;
 
-    toast.classList.add("show");
+    toastElement.classList.add(
+        "show"
+    );
 
 
     setTimeout(() => {
-        toast.classList.remove("show");
-    }, 2200);
+
+        toastElement.classList.remove(
+            "show"
+        );
+
+    }, 2000);
+
 }
 
 
-/* Search */
+function openCart() {
 
-searchInput.addEventListener("input", event => {
+    cartPanel.classList.add(
+        "active"
+    );
 
-    searchTerm = event.target.value;
+    overlay.classList.add(
+        "active"
+    );
 
-    renderProducts();
-});
-
-
-/* Filters */
-
-document.querySelectorAll(".filter").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        document
-            .querySelectorAll(".filter")
-            .forEach(btn =>
-                btn.classList.remove("active")
-            );
+}
 
 
-        button.classList.add("active");
+function closeCart() {
 
-        currentFilter =
-            button.dataset.filter;
+    cartPanel.classList.remove(
+        "active"
+    );
 
-        renderProducts();
-    });
-});
+    overlay.classList.remove(
+        "active"
+    );
 
-
-/* Category buttons */
-
-document.querySelectorAll(".category-card").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        currentFilter =
-            button.dataset.category;
+}
 
 
-        document
-            .querySelectorAll(".filter")
-            .forEach(filter => {
+search.addEventListener(
+    "input",
+    event => {
 
-                filter.classList.toggle(
-                    "active",
-                    filter.dataset.filter === currentFilter
-                );
-            });
-
-
-        document
-            .getElementById("products")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
-
+        searchQuery =
+            event.target.value;
 
         renderProducts();
-    });
-});
 
+    }
+);
 
-/* Cart buttons */
 
 document
     .getElementById("openCart")
-    .addEventListener("click", openCart);
+    .addEventListener(
+        "click",
+        openCart
+    );
 
 
 document
     .getElementById("closeCart")
-    .addEventListener("click", closeCart);
+    .addEventListener(
+        "click",
+        closeCart
+    );
 
 
-overlay.addEventListener("click", closeCart);
+overlay.addEventListener(
+    "click",
+    closeCart
+);
 
 
 document
-    .getElementById("continueShopping")
-    .addEventListener("click", closeCart);
+    .querySelectorAll(
+        "[data-filter]"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                currentFilter =
+                    button.dataset.filter;
 
 
-/* Checkout */
+                document
+                    .querySelectorAll(
+                        ".filters button"
+                    )
+                    .forEach(filter => {
 
-checkoutButton.addEventListener("click", () => {
+                        filter.classList.toggle(
+                            "active",
+                            filter.dataset.filter ===
+                            currentFilter
+                        );
 
-    if (cart.length === 0) return;
-
-    showToast(
-        "Checkout system coming soon!"
-    );
-});
+                    });
 
 
-/* Start */
+                renderProducts();
+
+
+                document
+                    .getElementById(
+                        "products"
+                    )
+                    .scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+            }
+        );
+
+    });
+
+
+checkout.addEventListener(
+    "click",
+    () => {
+
+        if (!cart.length) return;
+
+        showToast(
+            "Checkout is coming soon!"
+        );
+
+    }
+);
+
 
 renderProducts();
+
 renderCart();
