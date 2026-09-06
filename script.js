@@ -1,547 +1,500 @@
 const products = [
-  {
-    id: 1,
-    name: "EA Sports FC 26",
-    category: "games",
-    price: 8900,
-    emoji: "⚽",
-    desc: "PC • Digital Key",
-    badge: "HOT"
-  },
+    {
+        id: 1,
+        name: "EA Sports FC 26",
+        category: "Games",
+        price: 8900,
+        icon: "⚽",
+        description: "The ultimate football gaming experience."
+    },
 
-  {
-    id: 2,
-    name: "Steam Wallet 20€",
-    category: "cards",
-    price: 4200,
-    emoji: "🎴",
-    desc: "Global • Instant Delivery",
-    badge: "NEW"
-  },
+    {
+        id: 2,
+        name: "Minecraft Java & Bedrock",
+        category: "Games",
+        price: 8400,
+        icon: "⛏️",
+        description: "Build, explore and survive your own world."
+    },
 
-  {
-    id: 3,
-    name: "PlayStation Plus",
-    category: "subscriptions",
-    price: 7600,
-    emoji: "🎮",
-    desc: "12 Months • PS5/PS4",
-    badge: "TOP"
-  },
+    {
+        id: 3,
+        name: "Steam Wallet 20€",
+        category: "Gift Cards",
+        price: 4200,
+        icon: "🎮",
+        description: "Add funds to your Steam account instantly."
+    },
 
-  {
-    id: 4,
-    name: "Game Pass Ultimate",
-    category: "subscriptions",
-    price: 6900,
-    emoji: "🟩",
-    desc: "1 Month • Xbox / PC",
-    badge: ""
-  },
+    {
+        id: 4,
+        name: "PlayStation Gift Card",
+        category: "Gift Cards",
+        price: 5000,
+        icon: "🕹️",
+        description: "Shop games and digital content on PlayStation."
+    },
 
-  {
-    id: 5,
-    name: "Valorant Points 2050",
-    category: "cards",
-    price: 5100,
-    emoji: "🎯",
-    desc: "Riot Games • Instant",
-    badge: ""
-  },
+    {
+        id: 5,
+        name: "PlayStation Plus",
+        category: "Memberships",
+        price: 7600,
+        icon: "⭐",
+        description: "Unlock online multiplayer and monthly games."
+    },
 
-  {
-    id: 6,
-    name: "Minecraft Java & Bedrock",
-    category: "games",
-    price: 8400,
-    emoji: "⛏️",
-    desc: "PC • Microsoft Account",
-    badge: ""
-  },
+    {
+        id: 6,
+        name: "Game Pass Ultimate",
+        category: "Memberships",
+        price: 6900,
+        icon: "🎯",
+        description: "Access a huge library of amazing games."
+    },
 
-  {
-    id: 7,
-    name: "Discord Nitro",
-    category: "subscriptions",
-    price: 3500,
-    emoji: "💬",
-    desc: "1 Month • Digital",
-    badge: ""
-  },
+    {
+        id: 7,
+        name: "Valorant Points 2050",
+        category: "Points",
+        price: 5100,
+        icon: "💎",
+        description: "Get Valorant Points for your account."
+    },
 
-  {
-    id: 8,
-    name: "Gift Card Service",
-    category: "services",
-    price: 1500,
-    emoji: "⚡",
-    desc: "Custom Amount • Fast",
-    badge: ""
-  }
+    {
+        id: 8,
+        name: "Discord Nitro",
+        category: "Memberships",
+        price: 3500,
+        icon: "💬",
+        description: "Upgrade your Discord experience with Nitro."
+    }
 ];
 
 
-let cart = JSON.parse(
-  localStorage.getItem("shadowCart") || "[]"
-);
+let cart = JSON.parse(localStorage.getItem("shadowCart")) || [];
 
-let filter = "all";
-
-
-const grid =
-  document.getElementById("productsGrid");
-
-const search =
-  document.getElementById("searchInput");
-
-const cartPanel =
-  document.getElementById("cartPanel");
-
-const overlay =
-  document.getElementById("overlay");
-
-const cartItems =
-  document.getElementById("cartItems");
-
-const cartCount =
-  document.getElementById("cartCount");
-
-const cartTotal =
-  document.getElementById("cartTotal");
-
-const toast =
-  document.getElementById("toast");
+let currentFilter = "All";
+let searchTerm = "";
 
 
-function money(number) {
+const productsGrid = document.getElementById("productsGrid");
+const emptyProducts = document.getElementById("emptyProducts");
 
-  return new Intl.NumberFormat(
-    "fr-FR"
-  ).format(number) + " DA";
+const searchInput = document.getElementById("searchInput");
 
+const cartPanel = document.getElementById("cartPanel");
+const overlay = document.getElementById("overlay");
+
+const cartItems = document.getElementById("cartItems");
+const cartEmpty = document.getElementById("cartEmpty");
+
+const cartCount = document.getElementById("cartCount");
+const cartTotal = document.getElementById("cartTotal");
+
+const checkoutButton = document.getElementById("checkoutButton");
+
+const toast = document.getElementById("toast");
+
+
+/* Format price */
+
+function formatPrice(price) {
+    return price.toLocaleString("en-US") + " DA";
 }
 
 
+/* Save cart */
+
+function saveCart() {
+    localStorage.setItem("shadowCart", JSON.stringify(cart));
+}
+
+
+/* Render products */
 
 function renderProducts() {
 
-  const query =
-    search.value
-      .trim()
-      .toLowerCase();
+    const filteredProducts = products.filter(product => {
 
+        const matchesCategory =
+            currentFilter === "All" ||
+            product.category === currentFilter;
 
-  const shown =
-    products.filter(product => {
+        const matchesSearch =
+            product.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
 
-      const categoryMatch =
-        filter === "all" ||
-        product.category === filter;
-
-      const searchMatch =
-        product.name
-          .toLowerCase()
-          .includes(query);
-
-      return categoryMatch &&
-        searchMatch;
-
+        return matchesCategory && matchesSearch;
     });
 
 
-  if (!shown.length) {
-
-    grid.innerHTML = `
-      <p style="
-        color:#9299a8;
-        grid-column:1/-1;
-      ">
-        ما لقيناش منتجات مطابقة.
-      </p>
-    `;
-
-    return;
-  }
+    productsGrid.innerHTML = "";
 
 
-  grid.innerHTML =
-    shown.map(product => {
+    filteredProducts.forEach(product => {
 
-      return `
-        <article class="product">
+        const card = document.createElement("article");
 
-          <div class="product-img">
+        card.className = "product-card";
 
-            <span>
-              ${product.emoji}
-            </span>
-
-            ${
-              product.badge
-              ?
-              `
-              <span class="badge">
-                ${product.badge}
-              </span>
-              `
-              :
-              ""
-            }
-
-          </div>
-
-
-          <div class="product-info">
-
-            <h3>
-              ${product.name}
-            </h3>
-
-            <p>
-              ${product.desc}
-            </p>
-
-
-            <div class="price-row">
-
-              <span class="price">
-                ${money(product.price)}
-              </span>
-
-              <button
-                class="add"
-                data-id="${product.id}"
-                aria-label="أضف للسلة"
-              >
-                +
-              </button>
-
+        card.innerHTML = `
+            <div class="product-image">
+                ${product.icon}
             </div>
 
-          </div>
+            <div class="product-info">
 
-        </article>
-      `;
+                <span class="product-category">
+                    ${product.category}
+                </span>
 
-    }).join("");
+                <h3 class="product-title">
+                    ${product.name}
+                </h3>
 
+                <p class="product-description">
+                    ${product.description}
+                </p>
 
-  document
-    .querySelectorAll(".add")
-    .forEach(button => {
+                <div class="product-bottom">
 
-      button.onclick = () => {
+                    <strong class="product-price">
+                        ${formatPrice(product.price)}
+                    </strong>
 
-        addToCart(
-          Number(button.dataset.id)
-        );
+                    <button
+                        class="add-button"
+                        onclick="addToCart(${product.id})"
+                    >
+                        Add to Cart
+                    </button>
 
-      };
+                </div>
 
+            </div>
+        `;
+
+        productsGrid.appendChild(card);
     });
 
+
+    if (filteredProducts.length === 0) {
+        emptyProducts.classList.add("show");
+    } else {
+        emptyProducts.classList.remove("show");
+    }
 }
 
 
+/* Add product */
 
-function addToCart(id) {
+function addToCart(productId) {
 
-  const product =
-    products.find(
-      item => item.id === id
+    const product = products.find(
+        item => item.id === productId
+    );
+
+    if (!product) return;
+
+
+    const existingItem = cart.find(
+        item => item.id === productId
     );
 
 
-  if (!product) return;
-
-
-  const existing =
-    cart.find(
-      item => item.id === id
-    );
-
-
-  if (existing) {
-
-    existing.qty++;
-
-  } else {
-
-    cart.push({
-      ...product,
-      qty: 1
-    });
-
-  }
-
-
-  saveCart();
-
-  renderCart();
-
-  showToast(
-    "تمت إضافة المنتج للسلة ✓"
-  );
-
-}
-
-
-
-function removeFromCart(id) {
-
-  cart =
-    cart.filter(
-      item => item.id !== id
-    );
-
-
-  saveCart();
-
-  renderCart();
-
-}
-
-
-
-function saveCart() {
-
-  localStorage.setItem(
-    "shadowCart",
-    JSON.stringify(cart)
-  );
-
-}
-
-
-
-function renderCart() {
-
-  const count =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.qty,
-      0
-    );
-
-
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum +
-        item.price *
-        item.qty,
-      0
-    );
-
-
-  cartCount.textContent =
-    count;
-
-  cartTotal.textContent =
-    money(total);
-
-
-  if (!cart.length) {
-
-    cartItems.innerHTML = `
-      <p class="empty">
-        السلة فارغة حالياً.
-      </p>
-    `;
-
-    return;
-
-  }
-
-
-  cartItems.innerHTML =
-    cart.map(item => {
-
-      return `
-        <div class="cart-item">
-
-          <span class="emoji">
-            ${item.emoji}
-          </span>
-
-
-          <div>
-
-            <h4>
-              ${item.name}
-            </h4>
-
-            <small>
-              ${money(item.price)}
-              ×
-              ${item.qty}
-            </small>
-
-          </div>
-
-
-          <button
-            class="remove"
-            data-remove="${item.id}"
-            aria-label="حذف"
-          >
-            ✕
-          </button>
-
-        </div>
-      `;
-
-    }).join("");
-
-
-  document
-    .querySelectorAll("[data-remove]")
-    .forEach(button => {
-
-      button.onclick = () => {
-
-        removeFromCart(
-          Number(
-            button.dataset.remove
-          )
-        );
-
-      };
-
-    });
-
-}
-
-
-
-function openCart() {
-
-  cartPanel.classList.add(
-    "open"
-  );
-
-  overlay.classList.add(
-    "show"
-  );
-
-}
-
-
-
-function closeCart() {
-
-  cartPanel.classList.remove(
-    "open"
-  );
-
-  overlay.classList.remove(
-    "show"
-  );
-
-}
-
-
-
-function showToast(message) {
-
-  toast.textContent =
-    message;
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  setTimeout(() => {
-
-    toast.classList.remove(
-      "show"
-    );
-
-  }, 2200);
-
-}
-
-
-
-document
-  .getElementById("cartButton")
-  .onclick = openCart;
-
-
-document
-  .getElementById("closeCart")
-  .onclick = closeCart;
-
-
-overlay.onclick =
-  closeCart;
-
-
-search.oninput =
-  renderProducts;
-
-
-
-document
-  .querySelectorAll(".category")
-  .forEach(button => {
-
-    button.onclick = () => {
-
-      document
-        .querySelectorAll(
-          ".category"
-        )
-        .forEach(item => {
-
-          item.classList.remove(
-            "active"
-          );
-
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            ...product,
+            quantity: 1
         });
-
-
-      button.classList.add(
-        "active"
-      );
-
-
-      filter =
-        button.dataset.filter;
-
-
-      renderProducts();
-
-    };
-
-  });
-
-
-
-document
-  .getElementById("checkout")
-  .onclick = () => {
-
-    if (!cart.length) {
-
-      showToast(
-        "السلة فارغة"
-      );
-
-      return;
-
     }
 
 
-    showToast(
-      "الدفع التجريبي جاهز — اربط بوابة الدفع لإكمال الطلب"
+    saveCart();
+    renderCart();
+
+    showToast(`${product.name} added to cart!`);
+}
+
+
+/* Remove product */
+
+function removeFromCart(productId) {
+
+    cart = cart.filter(
+        item => item.id !== productId
     );
 
-  };
+    saveCart();
+    renderCart();
+}
 
 
+/* Change quantity */
+
+function changeQuantity(productId, change) {
+
+    const item = cart.find(
+        item => item.id === productId
+    );
+
+    if (!item) return;
+
+
+    item.quantity += change;
+
+
+    if (item.quantity <= 0) {
+        removeFromCart(productId);
+        return;
+    }
+
+
+    saveCart();
+    renderCart();
+}
+
+
+/* Render cart */
+
+function renderCart() {
+
+    cartItems.innerHTML = "";
+
+
+    if (cart.length === 0) {
+
+        cartEmpty.classList.add("show");
+        cartItems.style.display = "none";
+
+    } else {
+
+        cartEmpty.classList.remove("show");
+        cartItems.style.display = "block";
+
+
+        cart.forEach(item => {
+
+            const cartItem = document.createElement("div");
+
+            cartItem.className = "cart-item";
+
+
+            cartItem.innerHTML = `
+
+                <div class="cart-item-image">
+                    ${item.icon}
+                </div>
+
+                <div>
+
+                    <h4>
+                        ${item.name}
+                    </h4>
+
+                    <div class="cart-item-price">
+                        ${formatPrice(item.price)}
+                    </div>
+
+                    <div class="quantity">
+
+                        <button
+                            onclick="changeQuantity(${item.id}, -1)"
+                        >
+                            −
+                        </button>
+
+                        <span>
+                            ${item.quantity}
+                        </span>
+
+                        <button
+                            onclick="changeQuantity(${item.id}, 1)"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="remove-item"
+                    onclick="removeFromCart(${item.id})"
+                    title="Remove"
+                >
+                    ×
+                </button>
+
+            `;
+
+
+            cartItems.appendChild(cartItem);
+        });
+    }
+
+
+    const totalQuantity = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
+
+
+    const totalPrice = cart.reduce(
+        (total, item) =>
+            total + item.price * item.quantity,
+        0
+    );
+
+
+    cartCount.textContent = totalQuantity;
+    cartTotal.textContent = formatPrice(totalPrice);
+
+    checkoutButton.disabled = cart.length === 0;
+}
+
+
+/* Open cart */
+
+function openCart() {
+
+    cartPanel.classList.add("active");
+    overlay.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+/* Close cart */
+
+function closeCart() {
+
+    cartPanel.classList.remove("active");
+    overlay.classList.remove("active");
+
+    document.body.style.overflow = "";
+}
+
+
+/* Toast */
+
+function showToast(message) {
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2200);
+}
+
+
+/* Search */
+
+searchInput.addEventListener("input", event => {
+
+    searchTerm = event.target.value;
+
+    renderProducts();
+});
+
+
+/* Filters */
+
+document.querySelectorAll(".filter").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document
+            .querySelectorAll(".filter")
+            .forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+
+        button.classList.add("active");
+
+        currentFilter =
+            button.dataset.filter;
+
+        renderProducts();
+    });
+});
+
+
+/* Category buttons */
+
+document.querySelectorAll(".category-card").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        currentFilter =
+            button.dataset.category;
+
+
+        document
+            .querySelectorAll(".filter")
+            .forEach(filter => {
+
+                filter.classList.toggle(
+                    "active",
+                    filter.dataset.filter === currentFilter
+                );
+            });
+
+
+        document
+            .getElementById("products")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+
+        renderProducts();
+    });
+});
+
+
+/* Cart buttons */
+
+document
+    .getElementById("openCart")
+    .addEventListener("click", openCart);
+
+
+document
+    .getElementById("closeCart")
+    .addEventListener("click", closeCart);
+
+
+overlay.addEventListener("click", closeCart);
+
+
+document
+    .getElementById("continueShopping")
+    .addEventListener("click", closeCart);
+
+
+/* Checkout */
+
+checkoutButton.addEventListener("click", () => {
+
+    if (cart.length === 0) return;
+
+    showToast(
+        "Checkout system coming soon!"
+    );
+});
+
+
+/* Start */
 
 renderProducts();
-
 renderCart();
