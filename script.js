@@ -5,7 +5,7 @@ const products = [
         name: "FiveM Server Key",
         category: "FiveM",
         price: 2500,
-        icon: "🎮",
+        image: "fivem-banner.png",
         tag: "HOT"
     },
 
@@ -179,6 +179,12 @@ function renderProducts() {
         card.className = "product";
 
 
+        const productImage =
+            product.image
+                ? `<img src="${product.image}" alt="${product.name}">`
+                : product.icon;
+
+
         card.innerHTML = `
 
             <em>
@@ -186,7 +192,7 @@ function renderProducts() {
             </em>
 
             <div class="product-image">
-                ${product.icon}
+                ${productImage}
             </div>
 
             <div class="product-body">
@@ -347,7 +353,7 @@ function renderCart() {
             element.innerHTML = `
 
                 <div class="cart-icon">
-                    ${item.icon}
+                    ${item.icon || "🎮"}
                 </div>
 
                 <div>
