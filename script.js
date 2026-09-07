@@ -1,92 +1,52 @@
 const products = [
-
     {
-        id: 1,
-        name: "FiveM Server Key",
+        id: 101,
+        name: "TZX",
         category: "FiveM",
-        price: 2500,
-        image: "fivem-banner.png",
-        tag: "HOT"
+        icon: "⚡",
+        tag: "HOT",
+        plans: [
+            { name: "1 Week", price: 5 },
+            { name: "1 Month", price: 10 },
+            { name: "1 Year", price: 50 },
+            { name: "Lifetime", price: 80 }
+        ]
     },
 
     {
-        id: 2,
-        name: "FiveM Premium Script",
+        id: 102,
+        name: "RedEngine",
         category: "FiveM",
-        price: 3500,
-        icon: "⚙️",
-        tag: "NEW"
+        icon: "🔥",
+        tag: "NEW",
+        plans: [
+            { name: "1 Week", price: 7 },
+            { name: "1 Month", price: 12 },
+            { name: "1 Year", price: 60 },
+            { name: "Lifetime", price: 80 }
+        ]
     },
 
     {
-        id: 3,
-        name: "CS2 Game Key",
-        category: "CS2",
-        price: 6500,
-        icon: "🔫",
-        tag: "HOT"
-    },
-
-    {
-        id: 4,
-        name: "CS2 Premium Skin",
-        category: "CS2",
-        price: 4500,
-        icon: "🎯",
-        tag: "TOP"
-    },
-
-    {
-        id: 5,
-        name: "Valorant Points 2050",
-        category: "Valorant",
-        price: 5100,
-        icon: "💎",
-        tag: "NEW"
-    },
-
-    {
-        id: 6,
-        name: "Valorant Gift Card",
-        category: "Valorant",
-        price: 5000,
-        icon: "🟣",
-        tag: "TOP"
-    },
-
-    {
-        id: 7,
-        name: "Steam Wallet 20€",
-        category: "Gift Cards",
-        price: 4200,
-        icon: "🎮",
-        tag: "-20%"
-    },
-
-    {
-        id: 8,
-        name: "Discord Nitro",
-        category: "Memberships",
-        price: 3500,
-        icon: "💬",
-        tag: "NEW"
+        id: 103,
+        name: "Taigo",
+        category: "FiveM",
+        icon: "💜",
+        tag: "TOP",
+        plans: [
+            { name: "1 Week", price: 8 },
+            { name: "1 Month", price: 15 },
+            { name: "1 Year", price: 70 },
+            { name: "Lifetime", price: 80 }
+        ]
     }
-
 ];
 
-
 let cart =
-    JSON.parse(
-        localStorage.getItem("shadowCart")
-    ) || [];
-
+    JSON.parse(localStorage.getItem("shadowCart")) || [];
 
 let currentFilter = "FiveM";
-
 let searchQuery = "";
-
-
-/* ELEMENTS */
 
 const grid =
     document.getElementById("productsGrid");
@@ -125,21 +85,17 @@ const toastElement =
 /* MONEY */
 
 function money(price) {
-
-    return price.toLocaleString("en-US") + " DA";
-
+    return Number(price).toLocaleString("en-US") + " €";
 }
 
 
 /* SAVE CART */
 
 function saveCart() {
-
     localStorage.setItem(
         "shadowCart",
         JSON.stringify(cart)
     );
-
 }
 
 
@@ -147,52 +103,35 @@ function saveCart() {
 
 function renderProducts() {
 
-    const filtered =
-        products.filter(product => {
+    const filtered = products.filter(product => {
 
-            const categoryMatch =
-                currentFilter === "All" ||
-                product.category === currentFilter;
+        const categoryMatch =
+            currentFilter === "All" ||
+            product.category === currentFilter;
 
-            const searchMatch =
-                product.name
-                    .toLowerCase()
-                    .includes(
-                        searchQuery.toLowerCase()
-                    );
+        const searchMatch =
+            product.name
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase());
 
-            return categoryMatch &&
-                searchMatch;
-
-        });
-
+        return categoryMatch && searchMatch;
+    });
 
     grid.innerHTML = "";
-
 
     filtered.forEach(product => {
 
         const card =
             document.createElement("article");
 
-
         card.className = "product";
-
-
-        const productImage =
-            product.image
-                ? `<img src="${product.image}" alt="${product.name}">`
-                : product.icon;
-
 
         card.innerHTML = `
 
-            <em>
-                ${product.tag}
-            </em>
+            <em>${product.tag}</em>
 
             <div class="product-image">
-                ${productImage}
+                ${product.icon}
             </div>
 
             <div class="product-body">
@@ -206,60 +145,67 @@ function renderProducts() {
                 </h3>
 
                 <p>
-                    Premium digital gaming product.
+                    Choose your preferred access duration.
                 </p>
 
-                <div class="product-bottom">
+                <div class="plans">
 
-                    <strong class="price">
-                        ${money(product.price)}
-                    </strong>
+                    ${product.plans.map(plan => `
 
-                    <button
-                        class="add"
-                        onclick="addToCart(${product.id})"
-                    >
-                        Add to Cart
-                    </button>
+                        <button
+                            class="plan-button"
+                            onclick="addPlanToCart(
+                                ${product.id},
+                                '${plan.name}',
+                                ${plan.price}
+                            )"
+                        >
+                            <span>
+                                ${plan.name}
+                            </span>
+
+                            <strong>
+                                ${money(plan.price)}
+                            </strong>
+                        </button>
+
+                    `).join("")}
 
                 </div>
 
             </div>
-
         `;
 
-
         grid.appendChild(card);
-
     });
 
-
     noResults.style.display =
-        filtered.length
-            ? "none"
-            : "block";
-
+        filtered.length ? "none" : "block";
 }
 
 
-/* ADD TO CART */
+/* ADD PLAN */
 
-function addToCart(id) {
+function addPlanToCart(
+    productId,
+    planName,
+    planPrice
+) {
 
     const product =
         products.find(
-            item => item.id === id
+            item => item.id === productId
         );
-
 
     if (!product) return;
 
+    const cartId =
+        productId + "-" + planName;
 
     const existing =
         cart.find(
-            item => item.id === id
+            item => item.cartId === cartId
         );
-
 
     if (existing) {
 
@@ -269,14 +215,30 @@ function addToCart(id) {
 
         cart.push({
 
-            ...product,
+            cartId: cartId,
+
+            id: product.id,
+
+            name:
+                product.name +
+                " — " +
+                planName,
+
+            category:
+                product.category,
+
+            icon:
+                product.icon,
+
+            price:
+                planPrice,
+
+            plan:
+                planName,
 
             quantity: 1
-
         });
-
     }
-
 
     saveCart();
 
@@ -284,43 +246,42 @@ function addToCart(id) {
 
     showToast(
         product.name +
+        " " +
+        planName +
         " added to cart!"
     );
-
 }
 
 
 /* QUANTITY */
 
-function changeQuantity(id, amount) {
+function changeQuantity(
+    cartId,
+    amount
+) {
 
     const item =
         cart.find(
-            product => product.id === id
+            product =>
+                product.cartId === cartId
         );
-
 
     if (!item) return;
 
-
     item.quantity += amount;
-
 
     if (item.quantity <= 0) {
 
         cart =
             cart.filter(
                 product =>
-                    product.id !== id
+                    product.cartId !== cartId
             );
-
     }
-
 
     saveCart();
 
     renderCart();
-
 }
 
 
@@ -330,7 +291,6 @@ function renderCart() {
 
     cartItems.innerHTML = "";
 
-
     if (cart.length === 0) {
 
         cartEmpty.style.display = "flex";
@@ -339,16 +299,13 @@ function renderCart() {
 
         cartEmpty.style.display = "none";
 
-
         cart.forEach(item => {
 
             const element =
                 document.createElement("div");
 
-
             element.className =
                 "cart-item";
-
 
             element.innerHTML = `
 
@@ -370,7 +327,7 @@ function renderCart() {
 
                         <button
                             onclick="changeQuantity(
-                                ${item.id},
+                                '${item.cartId}',
                                 -1
                             )"
                         >
@@ -383,7 +340,7 @@ function renderCart() {
 
                         <button
                             onclick="changeQuantity(
-                                ${item.id},
+                                '${item.cartId}',
                                 1
                             )"
                         >
@@ -397,7 +354,7 @@ function renderCart() {
                 <button
                     class="remove"
                     onclick="changeQuantity(
-                        ${item.id},
+                        '${item.cartId}',
                         -999
                     )"
                 >
@@ -406,13 +363,9 @@ function renderCart() {
 
             `;
 
-
             cartItems.appendChild(element);
-
         });
-
     }
-
 
     const quantity =
         cart.reduce(
@@ -420,7 +373,6 @@ function renderCart() {
                 sum + item.quantity,
             0
         );
-
 
     const total =
         cart.reduce(
@@ -431,18 +383,14 @@ function renderCart() {
             0
         );
 
-
     cartCount.textContent =
         quantity;
-
 
     cartTotal.textContent =
         money(total);
 
-
     checkout.disabled =
         cart.length === 0;
-
 }
 
 
@@ -457,7 +405,6 @@ function showToast(message) {
         "show"
     );
 
-
     setTimeout(() => {
 
         toastElement.classList.remove(
@@ -465,7 +412,6 @@ function showToast(message) {
         );
 
     }, 2000);
-
 }
 
 
@@ -480,7 +426,6 @@ function openCart() {
     overlay.classList.add(
         "active"
     );
-
 }
 
 
@@ -495,23 +440,24 @@ function closeCart() {
     overlay.classList.remove(
         "active"
     );
-
 }
 
 
 /* SEARCH */
 
-search.addEventListener(
-    "input",
-    event => {
+if (search) {
 
-        searchQuery =
-            event.target.value;
+    search.addEventListener(
+        "input",
+        event => {
 
-        renderProducts();
+            searchQuery =
+                event.target.value;
 
-    }
-);
+            renderProducts();
+        }
+    );
+}
 
 
 /* CART BUTTON */
@@ -551,9 +497,7 @@ document
 /* FILTERS */
 
 document
-    .querySelectorAll(
-        "[data-filter]"
-    )
+    .querySelectorAll("[data-filter]")
     .forEach(button => {
 
         button.addEventListener(
@@ -563,11 +507,8 @@ document
                 currentFilter =
                     button.dataset.filter;
 
-
                 document
-                    .querySelectorAll(
-                        ".filter"
-                    )
+                    .querySelectorAll(".filter")
                     .forEach(filter => {
 
                         filter.classList.toggle(
@@ -575,33 +516,24 @@ document
                             filter.dataset.filter ===
                             currentFilter
                         );
-
                     });
-
 
                 renderProducts();
 
-
                 document
-                    .getElementById(
-                        "products"
-                    )
+                    .getElementById("products")
                     .scrollIntoView({
                         behavior: "smooth"
                     });
-
             }
         );
-
     });
 
 
 /* CATEGORY CARDS */
 
 document
-    .querySelectorAll(
-        ".category-card"
-    )
+    .querySelectorAll(".category-card")
     .forEach(card => {
 
         card.addEventListener(
@@ -611,21 +543,15 @@ document
                 currentFilter =
                     card.dataset.category;
 
-
                 renderProducts();
 
-
                 document
-                    .getElementById(
-                        "products"
-                    )
+                    .getElementById("products")
                     .scrollIntoView({
                         behavior: "smooth"
                     });
-
             }
         );
-
     });
 
 
@@ -640,7 +566,6 @@ checkout.addEventListener(
         showToast(
             "Checkout is coming soon!"
         );
-
     }
 );
 
@@ -655,9 +580,7 @@ document
             "active",
             filter.dataset.filter === "FiveM"
         );
-
     });
-
 
 renderProducts();
 
