@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+  <div class="nav">
+
+    <a href="#" class="brand">
+      <img src="logo.png" alt="Shadow Shop">
+      <span>SHADOW SHOP</span>
+    </a>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#products">Products</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div>
+      <input
+        id="search"
+        class="search"
+        type="text"
+        placeholder="Search..."
+      >
+
+      <button id="cart" class="cart-button" type="button">
+        🛒 Cart
+        <span id="count">0</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+
+<section class="hero" id="home">
+
+  <img src="banner.jpg" alt="Shadow Shop Banner">
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-text">
+    <h1>PLAY SMARTER.<br>PLAY BETTER.</h1>
+
+    <p>
+      Premium gaming products for your gaming experience.
+    </p>
+
+    <a href="#products">SHOP NOW</a>
+  </div>
+
+</section>
+
+
+<section class="categories" id="categories">
+
+  <button type="button" data-filter="FiveM">
+    <img src="fivem.png" alt="FiveM">
+    <span>FiveM</span>
+  </button>
+
+  <button type="button" data-filter="CS2">
+    <img src="cs2.png" alt="CS2">
+    <span>CS2</span>
+  </button>
+
+  <button type="button" data-filter="Valorant">
+    <img src="valorant.png" alt="Valorant">
+    <span>Valorant</span>
+  </button>
+
+  <button type="button" data-filter="Gift Cards">
+    <span>Gift Cards</span>
+  </button>
+
+</section>
+
+
+<section class="products-section" id="products">
+
+  <div class="filters">
+
+    <button type="button" data-filter="All">All</button>
+    <button type="button" data-filter="FiveM">FiveM</button>
+    <button type="button" data-filter="CS2">CS2</button>
+    <button type="button" data-filter="Valorant">Valorant</button>
+    <button type="button" data-filter="Gift Cards">Gift Cards</button>
+    <button type="button" data-filter="Memberships">Memberships</button>
+
+  </div>
+
+  <div id="grid" class="products-grid"></div>
+
+  <div id="none" style="display:none;">
+    No products found.
+  </div>
+
+</section>
+
+
+<section class="features" id="about">
+
+  <div>
+    <h3>Instant Delivery</h3>
+    <p>Fast digital delivery.</p>
+  </div>
+
+  <div>
+    <h3>Secure Shopping</h3>
+    <p>Safe and simple shopping.</p>
+  </div>
+
+  <div>
+    <h3>Gaming Focused</h3>
+    <p>Products made for gamers.</p>
+  </div>
+
+</section>
+
+
+<footer class="footer">
+
+  <div>
+    <img src="logo.png" alt="Shadow Shop">
+    <span>SHADOW SHOP</span>
+  </div>
+
+  <p>© 2026 Shadow Shop. All rights reserved.</p>
+
+</footer>
+
+
+<!-- CART -->
+<div id="overlay">
+
+  <div id="cart">
+
+    <h2>Your Cart</h2>
+
+    <div id="items"></div>
+
+    <div id="empty">
+      Your cart is empty.
+    </div>
+
+    <div>
+      Total:
+      <strong id="total">$0.00</strong>
+    </div>
+
+    <button id="checkout" type="button">
+      Checkout
+    </button>
+
+  </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
