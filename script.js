@@ -81,7 +81,7 @@ let cart =
     ) || [];
 
 
-let currentFilter = "All";
+let currentFilter = "FiveM";
 
 let searchQuery = "";
 
@@ -640,6 +640,18 @@ checkout.addEventListener(
 
 
 /* START */
+
+document
+    .querySelectorAll(".filter")
+    .forEach(filter => {
+
+        filter.classList.toggle(
+            "active",
+            filter.dataset.filter === "FiveM"
+        );
+
+    });
+
 
 renderProducts();
 
