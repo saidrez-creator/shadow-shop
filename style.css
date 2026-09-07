@@ -789,6 +789,13 @@ a {
         #08070d;
 }
 
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .product-body {
     padding: 14px;
 }
@@ -1314,12 +1321,12 @@ a {
         min-height: 70px;
     }
 
-    .logo-image {
+    .logo-icon {
         width: 38px;
         height: 38px;
     }
 
-    .logo-icon {
+    .logo-image {
         width: 38px;
         height: 38px;
     }
@@ -1388,4 +1395,14 @@ a {
         gap: 40px;
     }
 
+}
+
+
+/* PRODUCT IMAGES */
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
