@@ -42,11 +42,15 @@ const products = [
     }
 ];
 
+
 let cart =
     JSON.parse(localStorage.getItem("shadowCart")) || [];
 
 let currentFilter = "FiveM";
 let searchQuery = "";
+
+
+/* ELEMENTS */
 
 const grid =
     document.getElementById("productsGrid");
@@ -92,10 +96,12 @@ function money(price) {
 /* SAVE CART */
 
 function saveCart() {
+
     localStorage.setItem(
         "shadowCart",
         JSON.stringify(cart)
     );
+
 }
 
 
@@ -103,21 +109,27 @@ function saveCart() {
 
 function renderProducts() {
 
-    const filtered = products.filter(product => {
+    const filtered =
+        products.filter(product => {
 
-        const categoryMatch =
-            currentFilter === "All" ||
-            product.category === currentFilter;
+            const categoryMatch =
+                currentFilter === "All" ||
+                product.category === currentFilter;
 
-        const searchMatch =
-            product.name
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase());
+            const searchMatch =
+                product.name
+                    .toLowerCase()
+                    .includes(
+                        searchQuery.toLowerCase()
+                    );
 
-        return categoryMatch && searchMatch;
-    });
+            return categoryMatch &&
+                   searchMatch;
+        });
+
 
     grid.innerHTML = "";
+
 
     filtered.forEach(product => {
 
@@ -126,9 +138,12 @@ function renderProducts() {
 
         card.className = "product";
 
+
         card.innerHTML = `
 
-            <em>${product.tag}</em>
+            <em>
+                ${product.tag}
+            </em>
 
             <div class="product-image">
                 ${product.icon}
@@ -145,7 +160,7 @@ function renderProducts() {
                 </h3>
 
                 <p>
-                    Choose your preferred access duration.
+                    Choose your access duration.
                 </p>
 
                 <div class="plans">
@@ -154,12 +169,15 @@ function renderProducts() {
 
                         <button
                             class="plan-button"
-                            onclick="addPlanToCart(
-                                ${product.id},
-                                '${plan.name}',
-                                ${plan.price}
-                            )"
+                            onclick="
+                                addPlanToCart(
+                                    ${product.id},
+                                    '${plan.name}',
+                                    ${plan.price}
+                                )
+                            "
                         >
+
                             <span>
                                 ${plan.name}
                             </span>
@@ -167,6 +185,7 @@ function renderProducts() {
                             <strong>
                                 ${money(plan.price)}
                             </strong>
+
                         </button>
 
                     `).join("")}
@@ -176,15 +195,20 @@ function renderProducts() {
             </div>
         `;
 
+
         grid.appendChild(card);
+
     });
 
+
     noResults.style.display =
-        filtered.length ? "none" : "block";
+        filtered.length
+            ? "none"
+            : "block";
 }
 
 
-/* ADD PLAN */
+/* ADD PLAN TO CART */
 
 function addPlanToCart(
     productId,
@@ -197,15 +221,20 @@ function addPlanToCart(
             item => item.id === productId
         );
 
+
     if (!product) return;
+
 
     const cartId =
         productId + "-" + planName;
 
+
     const existing =
         cart.find(
-            item => item.cartId === cartId
+            item =>
+                item.cartId === cartId
         );
+
 
     if (existing) {
 
@@ -238,7 +267,9 @@ function addPlanToCart(
 
             quantity: 1
         });
+
     }
+
 
     saveCart();
 
@@ -250,6 +281,7 @@ function addPlanToCart(
         planName +
         " added to cart!"
     );
+
 }
 
 
@@ -266,9 +298,12 @@ function changeQuantity(
                 product.cartId === cartId
         );
 
+
     if (!item) return;
 
+
     item.quantity += amount;
+
 
     if (item.quantity <= 0) {
 
@@ -277,11 +312,14 @@ function changeQuantity(
                 product =>
                     product.cartId !== cartId
             );
+
     }
+
 
     saveCart();
 
     renderCart();
+
 }
 
 
@@ -291,21 +329,27 @@ function renderCart() {
 
     cartItems.innerHTML = "";
 
+
     if (cart.length === 0) {
 
-        cartEmpty.style.display = "flex";
+        cartEmpty.style.display =
+            "flex";
 
     } else {
 
-        cartEmpty.style.display = "none";
+        cartEmpty.style.display =
+            "none";
+
 
         cart.forEach(item => {
 
             const element =
                 document.createElement("div");
 
+
             element.className =
                 "cart-item";
+
 
             element.innerHTML = `
 
@@ -326,10 +370,12 @@ function renderCart() {
                     <div class="quantity">
 
                         <button
-                            onclick="changeQuantity(
-                                '${item.cartId}',
-                                -1
-                            )"
+                            onclick="
+                                changeQuantity(
+                                    '${item.cartId}',
+                                    -1
+                                )
+                            "
                         >
                             −
                         </button>
@@ -339,10 +385,12 @@ function renderCart() {
                         </span>
 
                         <button
-                            onclick="changeQuantity(
-                                '${item.cartId}',
-                                1
-                            )"
+                            onclick="
+                                changeQuantity(
+                                    '${item.cartId}',
+                                    1
+                                )
+                            "
                         >
                             +
                         </button>
@@ -351,21 +399,28 @@ function renderCart() {
 
                 </div>
 
+
                 <button
                     class="remove"
-                    onclick="changeQuantity(
-                        '${item.cartId}',
-                        -999
-                    )"
+                    onclick="
+                        changeQuantity(
+                            '${item.cartId}',
+                            -999
+                        )
+                    "
                 >
                     ×
                 </button>
 
             `;
 
+
             cartItems.appendChild(element);
+
         });
+
     }
+
 
     const quantity =
         cart.reduce(
@@ -373,6 +428,7 @@ function renderCart() {
                 sum + item.quantity,
             0
         );
+
 
     const total =
         cart.reduce(
@@ -383,14 +439,18 @@ function renderCart() {
             0
         );
 
+
     cartCount.textContent =
         quantity;
+
 
     cartTotal.textContent =
         money(total);
 
+
     checkout.disabled =
         cart.length === 0;
+
 }
 
 
@@ -401,9 +461,11 @@ function showToast(message) {
     toastElement.textContent =
         message;
 
+
     toastElement.classList.add(
         "show"
     );
+
 
     setTimeout(() => {
 
@@ -412,6 +474,7 @@ function showToast(message) {
         );
 
     }, 2000);
+
 }
 
 
@@ -426,6 +489,7 @@ function openCart() {
     overlay.classList.add(
         "active"
     );
+
 }
 
 
@@ -440,6 +504,7 @@ function closeCart() {
     overlay.classList.remove(
         "active"
     );
+
 }
 
 
@@ -455,8 +520,10 @@ if (search) {
                 event.target.value;
 
             renderProducts();
+
         }
     );
+
 }
 
 
@@ -507,6 +574,7 @@ document
                 currentFilter =
                     button.dataset.filter;
 
+
                 document
                     .querySelectorAll(".filter")
                     .forEach(filter => {
@@ -516,17 +584,22 @@ document
                             filter.dataset.filter ===
                             currentFilter
                         );
+
                     });
 
+
                 renderProducts();
+
 
                 document
                     .getElementById("products")
                     .scrollIntoView({
                         behavior: "smooth"
                     });
+
             }
         );
+
     });
 
 
@@ -543,15 +616,19 @@ document
                 currentFilter =
                     card.dataset.category;
 
+
                 renderProducts();
+
 
                 document
                     .getElementById("products")
                     .scrollIntoView({
                         behavior: "smooth"
                     });
+
             }
         );
+
     });
 
 
@@ -566,6 +643,7 @@ checkout.addEventListener(
         showToast(
             "Checkout is coming soon!"
         );
+
     }
 );
 
@@ -580,7 +658,9 @@ document
             "active",
             filter.dataset.filter === "FiveM"
         );
+
     });
+
 
 renderProducts();
 
