@@ -1874,3 +1874,206 @@ a {
     }
 
 }
+/* ================================= */
+/* FIVEM MARKETPLACE */
+/* ================================= */
+
+.fivem-section {
+    display: none;
+
+    width: 100%;
+
+    padding-left:
+        max(
+            4%,
+            calc((100% - var(--max)) / 2)
+        );
+
+    padding-right:
+        max(
+            4%,
+            calc((100% - var(--max)) / 2)
+        );
+
+    background: #09070f;
+
+    border-top:
+        1px solid var(--line);
+}
+
+
+.fivem-section.visible {
+    display: block;
+}
+
+
+.fivem-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+
+/* ================================= */
+/* FIVEM PRODUCT */
+/* ================================= */
+
+.fivem-product {
+    min-width: 0;
+}
+
+
+.fivem-product .product-image {
+    height: 200px;
+}
+
+
+/* ================================= */
+/* PLANS */
+/* ================================= */
+
+.plans {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+.plan-button {
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding:
+        9px 11px;
+
+    border:
+        1px solid #32134f;
+
+    border-radius: 8px;
+
+    background: #0d0917;
+
+    color: white;
+
+    transition: .2s;
+}
+
+
+.plan-button span {
+    color: #c9bfd4;
+
+    font-size: 10px;
+}
+
+
+.plan-button strong {
+    color: #c54aff;
+
+    font-family: Orbitron, sans-serif;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+.plan-button:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #9a27ff;
+
+    background:
+        #160d22;
+
+    box-shadow:
+        0 6px 20px
+        rgba(120,0,255,.22);
+}
+
+
+/* LIFETIME */
+
+.plan-button:last-child {
+    grid-column:
+        1 / -1;
+
+    border-color:
+        #7620dc;
+
+    background:
+        linear-gradient(
+            135deg,
+            #160d22,
+            #0d0917
+        );
+}
+
+
+/* ================================= */
+/* LOGO IMAGE */
+/* ================================= */
+
+.logo-image {
+    width: 42px;
+    height: 42px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* ================================= */
+/* MOBILE */
+/* ================================= */
+
+@media(max-width:1000px) {
+
+    .fivem-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media(max-width:620px) {
+
+    .logo-image {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .fivem-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .plans {
+        grid-template-columns: 1fr;
+    }
+
+
+    .plan-button:last-child {
+        grid-column: auto;
+    }
+
+}
