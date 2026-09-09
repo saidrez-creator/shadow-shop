@@ -1092,3 +1092,46 @@ footer strong {
     width: 100%;
   }
 }
+/* =========================================================
+   FINAL HERO RESPONSIVE FIX
+   ========================================================= */
+
+.hero-card {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 0;
+  max-width: 620px;
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 901px) {
+  .hero-card {
+    max-width: 600px;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-card {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 45px;
+    padding-bottom: 45px;
+  }
+
+  .hero-card {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+    border-radius: 18px;
+    background-position: center;
+  }
+}
