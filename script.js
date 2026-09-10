@@ -84,7 +84,7 @@ const products = [
   {
     id: "susano",
     name: "Susano",
-    image: "cheats-banner.png",
+    image: "susano.png",
     prices: {
       week: 8,
       month: 25,
