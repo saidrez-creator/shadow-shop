@@ -26,10 +26,10 @@ const products = [
     name: "TZ",
     image: "tz.png",
     prices: {
-      week: 5,
-      month: 15,
-      year: 40,
-      lifetime: 80
+      week: 10,
+      month: 20,
+      year: 30,
+      lifetime: 30
     }
   },
 
@@ -38,10 +38,10 @@ const products = [
     name: "TZX",
     image: "tzx.png",
     prices: {
-      week: 7,
+      week: 5,
       month: 20,
-      year: 50,
-      lifetime: 100
+      year: 35,
+      lifetime: 35
     }
   },
 
@@ -58,9 +58,9 @@ const products = [
   },
 
   {
-    id: "shout",
-    name: "Shout",
-    image: "fivem.png",
+    id: "macho",
+    name: "macho",
+    image: "macho.png",
     prices: {
       week: 4,
       month: 12,
@@ -94,9 +94,9 @@ const products = [
   },
 
   {
-    id: "thaigo",
-    name: "Thaigo",
-    image: "valorant.png",
+    id: "lumia",
+    name: "lumia",
+    image: "lumia.png",
     prices: {
       week: 5,
       month: 18,
