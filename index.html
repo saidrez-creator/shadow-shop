@@ -3,581 +3,331 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#08060d">
 
   <title>ShadowShop</title>
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-<header class="site-header">
-  <nav class="navbar">
-
-    <a class="brand" href="#home">
-      <img src="logo.png" alt="ShadowShop logo">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="ShadowShop Logo">
       <span>SHADOW<span>SHOP</span></span>
-    </a>
+    </div>
 
-    <div class="desktop-nav">
+    <nav class="desktop-nav">
       <a href="#home">Home</a>
       <a href="#categories">Categories</a>
       <a href="#support">Support</a>
-    </div>
+    </nav>
 
-    <div class="desktop-actions">
-      <button id="accountButton" class="nav-button">
+    <div class="header-actions">
+      <button id="accountButton" class="header-btn">
         Account
       </button>
 
-      <button id="cartButton" class="nav-button cart-button">
-        Cart
-        <span id="cartCount" class="cart-count">0</span>
+      <button id="cartButton" class="cart-btn">
+        🛒
+        <span id="cartCount">0</span>
+      </button>
+
+      <button id="menuButton" class="menu-btn">
+        ☰
       </button>
     </div>
+  </header>
 
-    <button
-      id="mobileMenuButton"
-      class="mobile-menu-button"
-      type="button">
-      ☰
-    </button>
-
-  </nav>
-</header>
-
-
-<main id="home">
 
   <!-- HERO -->
-
-  <section class="hero">
+  <section id="home" class="hero">
 
     <div class="hero-bg"></div>
 
     <div class="hero-content">
+      <p class="hero-small">SHADOWSHOP</p>
 
-      <div class="hero-copy">
+      <h1>
+        LEVEL UP<br>
+        YOUR GAME
+      </h1>
 
-        <div class="eyebrow">
-          ⚡ DIGITAL GAMING STORE
-        </div>
+      <p class="hero-text">
+        Premium gaming products built for a better experience.
+      </p>
 
-        <h1>
-          LEVEL UP
-          <span>YOUR GAME</span>
-        </h1>
-
-        <p>
-          Discover premium digital gaming products,
-          memberships and gaming solutions at Shadow Shop.
-        </p>
-
-        <button
-          id="exploreProducts"
-          class="primary-button"
-          type="button">
-
-          Explore Products
-          <b>→</b>
-
-        </button>
-
-      </div>
-
+      <button id="exploreProducts" class="primary-btn">
+        Explore Products
+      </button>
     </div>
 
   </section>
 
 
   <!-- CATEGORIES -->
+  <section id="categories" class="section categories-section">
 
-  <section
-    id="categories"
-    class="section categories-section">
+    <div class="section-heading">
+      <p>EXPLORE</p>
 
-    <div class="container">
+      <h2>Categories</h2>
 
-      <div class="section-heading">
+      <span>
+        Choose a category to browse available products.
+      </span>
+    </div>
 
-        <span class="section-kicker">
-          EXPLORE
-        </span>
 
-        <h2>
-          Categories
-        </h2>
+    <!-- FiveM CATEGORY -->
+    <button id="fivemCategory" class="category-card">
 
-        <p>
-          Choose a category to browse available products.
-        </p>
-
+      <div class="category-image">
+        <img src="fivem-category.png" alt="FiveM">
       </div>
 
+      <div class="category-info">
+        <h3>FiveM</h3>
 
-      <button
-        id="fivemCategory"
-        class="category-card"
-        type="button">
+        <p>
+          Scripts · Menus · Tools
+        </p>
+      </div>
 
-        <div class="category-art">
+      <div class="category-arrow">
+        ›
+      </div>
 
-          <img
-            src="fivem.png"
-            alt="FiveM">
-
-        </div>
-
-        <div class="category-info">
-
-          <strong>
-            FiveM
-          </strong>
-
-          <span>
-            Scripts · Menus · Tools
-          </span>
-
-        </div>
-
-        <span class="category-arrow">
-          ›
-        </span>
-
-      </button>
-
-    </div>
+    </button>
 
   </section>
 
 
   <!-- FIVEM PRODUCTS -->
+  <section id="fivemStore" class="section products-section">
 
-  <section
-    id="fivemStore"
-    class="section products-section">
+    <button id="backToProducts" class="back-btn">
+      ← Back to Categories
+    </button>
 
-    <div class="container">
+    <div class="section-heading">
+      <p>FIVEM</p>
 
-      <div class="store-top">
+      <h2>Products</h2>
 
-        <div>
+      <span>
+        Choose your product and duration.
+      </span>
+    </div>
 
-          <span class="section-kicker">
-            FIVEM MARKETPLACE
-          </span>
+    <div id="fivemGrid" class="product-grid"></div>
 
-          <h2>
-            FiveM Products
-          </h2>
-
-          <p>
-            Select a product and choose your subscription duration.
-          </p>
-
-        </div>
+  </section>
 
 
-        <button
-          id="backToProducts"
-          class="back-button"
-          type="button">
+  <!-- ABOUT -->
+  <section class="about-section">
 
-          ← Categories
+    <div class="section-heading">
+      <p>SHADOWSHOP</p>
 
-        </button>
-
-      </div>
-
-
-      <div
-        id="fivemGrid"
-        class="product-grid">
-      </div>
-
+      <h2>
+        Built for a better gaming experience.
+      </h2>
     </div>
 
   </section>
 
 
   <!-- SUPPORT -->
+  <section id="support" class="section support-section">
 
-  <section
-    id="support"
-    class="section support-section">
+    <div class="section-heading">
+      <p>SUPPORT</p>
 
-    <div class="container support-grid">
+      <h2>Need Help?</h2>
 
-      <div>
+      <span>
+        Contact us if you need help with your order or account.
+      </span>
+    </div>
 
-        <span class="section-kicker">
-          SHADOWSHOP
-        </span>
-
-        <h2>
-          Built for a better gaming experience.
-        </h2>
-
-      </div>
-
-
-      <div class="support-cards">
-
-        <div class="mini-card">
-
-          <b>⚡ Fast</b>
-
-          <span>
-            Digital delivery workflow.
-          </span>
-
-        </div>
-
-
-        <div class="mini-card">
-
-          <b>🔒 Secure</b>
-
-          <span>
-            Account-based orders.
-          </span>
-
-        </div>
-
-
-        <div class="mini-card">
-
-          <b>💬 Support</b>
-
-          <span>
-            Help when you need it.
-          </span>
-
-        </div>
-
-      </div>
-
+    <div class="support-card">
+      <h3>ShadowShop Support</h3>
+      <p>
+        We're here to help with your shopping experience.
+      </p>
     </div>
 
   </section>
 
-</main>
 
+  <!-- CART OVERLAY -->
+  <div id="overlay" class="overlay"></div>
 
-<!-- FOOTER -->
-
-<footer>
-
-  <div class="footer-inner">
-
-    <div class="brand footer-brand">
-
-      <img
-        src="logo.png"
-        alt="">
-
-      <span>
-        SHADOW<span>SHOP</span>
-      </span>
-
-    </div>
-
-    <p>
-      Play Smarter, Not Harder.
-    </p>
-
-    <small>
-      © 2026 ShadowShop. All rights reserved.
-    </small>
-
-  </div>
-
-</footer>
-
-
-<!-- CART OVERLAY -->
-
-<div
-  id="overlay"
-  class="overlay">
-</div>
-
-
-<!-- CART -->
-
-<aside
-  id="cartPanel"
-  class="cart-panel">
-
-  <div class="panel-header">
-
-    <div>
-
-      <span class="section-kicker">
-        YOUR
-      </span>
-
-      <h2>
-        Cart
-      </h2>
-
-    </div>
-
-
-    <button
-      id="closeCart"
-      class="icon-button"
-      type="button">
-
-      ✕
-
-    </button>
-
-  </div>
-
-
-  <div
-    id="cartItems"
-    class="cart-items">
-  </div>
-
-
-  <div
-    id="cartEmpty"
-    class="cart-empty">
-
-    Your cart is empty.
-
-  </div>
-
-
-  <div class="cart-footer">
-
-    <div class="total-row">
-
-      <span>
-        Total
-      </span>
-
-      <strong id="cartTotal">
-        $0.00
-      </strong>
-
-    </div>
-
-
-    <button
-      id="checkoutButton"
-      class="primary-button full"
-      type="button">
-
-      Checkout
-
-    </button>
-
-  </div>
-
-</aside>
-
-
-<!-- LOGIN / SIGN UP -->
-
-<div
-  id="authOverlay"
-  class="modal-overlay">
-
-  <div class="auth-modal">
+  <aside id="cartPanel" class="side-panel">
 
     <div class="panel-header">
+      <h2>Your Cart</h2>
 
-      <div>
+      <button id="closeCart">
+        ×
+      </button>
+    </div>
 
-        <span class="section-kicker">
-          SHADOWSHOP ACCOUNT
-        </span>
+    <div id="cartItems" class="cart-items"></div>
+
+    <div id="cartEmpty" class="cart-empty">
+      Your cart is empty.
+    </div>
+
+    <div class="cart-footer">
+
+      <div class="cart-total">
+        <span>Total</span>
+        <strong>$<span id="cartTotal">0.00</span></strong>
+      </div>
+
+      <button id="checkoutButton" class="primary-btn checkout-btn">
+        Checkout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- AUTH -->
+  <div id="authOverlay" class="modal-overlay">
+
+    <div class="auth-modal">
+
+      <button id="authClose" class="modal-close">
+        ×
+      </button>
+
+      <div class="auth-header">
+
+        <p>SHADOWSHOP</p>
 
         <h2 id="authTitle">
           Login
         </h2>
 
-        <p id="authSubtitle">
+        <span id="authSubtitle">
           Login to your account.
-        </p>
+        </span>
 
       </div>
 
 
-      <button
-        id="authClose"
-        class="icon-button"
-        type="button">
+      <form id="authForm">
 
-        ✕
+        <input
+          id="authEmail"
+          type="email"
+          placeholder="Email"
+          required
+        >
 
-      </button>
+        <input
+          id="authPassword"
+          type="password"
+          placeholder="Password"
+          minlength="6"
+          required
+        >
+
+        <button
+          id="authSubmit"
+          type="submit"
+          class="primary-btn"
+        >
+          Login
+        </button>
+
+      </form>
+
+
+      <p id="authMessage" class="auth-message"></p>
+
+      <div class="auth-switch">
+        <span id="authSwitchText">
+          Don't have an account?
+        </span>
+
+        <button id="authSwitch">
+          Create Account
+        </button>
+      </div>
 
     </div>
 
-
-    <form id="authForm">
-
-      <label for="authEmail">
-        Email
-      </label>
-
-      <input
-        id="authEmail"
-        type="email"
-        autocomplete="email"
-        placeholder="you@example.com"
-        required>
+  </div>
 
 
-      <label for="authPassword">
-        Password
-      </label>
+  <!-- ACCOUNT -->
+  <div id="accountPanel" class="account-panel">
 
-      <input
-        id="authPassword"
-        type="password"
-        autocomplete="new-password"
-        placeholder="Minimum 6 characters"
-        minlength="6"
-        required>
+    <button id="accountClose" class="modal-close">
+      ×
+    </button>
+
+    <p class="account-label">
+      ACCOUNT
+    </p>
+
+    <h2>My Account</h2>
+
+    <p id="accountEmail">
+      Not logged in
+    </p>
+
+    <button id="logoutButton" class="logout-btn">
+      Logout
+    </button>
+
+  </div>
 
 
-      <button
-        id="authSubmit"
-        class="primary-button full"
-        type="submit">
+  <!-- MOBILE BAR -->
+  <nav class="mobile-bar">
 
-        Login
+    <button id="mobileHomeButton">
+      <span>⌂</span>
+      <small>Home</small>
+    </button>
 
-      </button>
+    <button id="mobileAccountButton">
+      <span>♙</span>
+      <small>Account</small>
+    </button>
 
-    </form>
-
-
-    <div class="auth-switch">
-
-      <span id="authSwitchText">
-        Don't have an account?
+    <button id="mobileCartButton" class="mobile-cart">
+      <span class="mobile-cart-icon">
+        🛒
+        <b id="mobileCartCount">0</b>
       </span>
 
-      <button
-        id="authSwitch"
-        type="button">
+      <small>Cart</small>
+    </button>
 
-        Sign Up
-
-      </button>
-
-    </div>
+  </nav>
 
 
-    <div
-      id="authMessage"
-      class="auth-message">
-    </div>
-
-  </div>
-
-</div>
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
 
 
-<!-- ACCOUNT -->
-
-<div
-  id="accountPanel"
-  class="account-panel">
-
-  <div class="account-title">
-    My Account
-  </div>
-
-  <div
-    id="accountEmail"
-    class="account-email">
-  </div>
-
-  <button
-    id="logoutButton"
-    class="logout-button"
-    type="button">
-
-    Logout
-
-  </button>
-
-</div>
+  <footer>
+    <p>© 2026 ShadowShop. All rights reserved.</p>
+  </footer>
 
 
-<!-- MOBILE BOTTOM BAR -->
-
-<nav class="mobile-bottom-bar">
-
-  <button
-    id="mobileHomeButton"
-    type="button">
-
-    <span>⌂</span>
-
-    <small>
-      Home
-    </small>
-
-  </button>
-
-
-  <button
-    id="mobileAccountButton"
-    type="button">
-
-    <span>♙</span>
-
-    <small>
-      Account
-    </small>
-
-  </button>
-
-
-  <button
-    id="mobileCartButton"
-    class="mobile-cart-button"
-    type="button">
-
-    <span>
-
-      🛒
-
-      <i id="mobileCartCount">
-        0
-      </i>
-
-    </span>
-
-    <small>
-      Cart
-    </small>
-
-  </button>
-
-</nav>
-
-
-<!-- TOAST -->
-
-<div
-  id="toast"
-  class="toast">
-</div>
-
-
-<script src="script.js?v=10"></script>
+  <script src="script.js?v=11"></script>
 
 </body>
 </html>
