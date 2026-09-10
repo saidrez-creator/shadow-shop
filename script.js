@@ -1,28 +1,35 @@
+/* =========================================================
+   SHADOWSHOP SCRIPT
+   ========================================================= */
+
 const SUPABASE_URL =
   "https://ikhxliiheyxyghtcler.supabase.co";
 
-const SUPABASE_KEY =
+const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_3wFAMAIs84K9aZYP8S_6Lw_-RIj19QJ";
 
 const supabaseClient =
-  supabase.createClient(
+  window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_PUBLISHABLE_KEY
   );
 
 
-// PRODUCTS
+/* =========================================================
+   PRODUCTS
+   ========================================================= */
 
 const products = [
+
   {
     id: "7tz",
     name: "7 TZ",
     image: "fivem.png",
     prices: {
-      "1 Week": 5,
-      "1 Month": 15,
-      "1 Year": 40,
-      "Life Time": 80
+      week: 5,
+      month: 15,
+      year: 40,
+      lifetime: 80
     }
   },
 
@@ -31,10 +38,10 @@ const products = [
     name: "TZX",
     image: "fivem-banner.png",
     prices: {
-      "1 Week": 7,
-      "1 Month": 20,
-      "1 Year": 50,
-      "Life Time": 100
+      week: 7,
+      month: 20,
+      year: 50,
+      lifetime: 100
     }
   },
 
@@ -43,10 +50,10 @@ const products = [
     name: "Vanity",
     image: "banner.jpg",
     prices: {
-      "1 Week": 5,
-      "1 Month": 15,
-      "1 Year": 45,
-      "Life Time": 90
+      week: 5,
+      month: 15,
+      year: 45,
+      lifetime: 90
     }
   },
 
@@ -55,22 +62,22 @@ const products = [
     name: "Shout",
     image: "fivem.png",
     prices: {
-      "1 Week": 4,
-      "1 Month": 12,
-      "1 Year": 35,
-      "Life Time": 70
+      week: 4,
+      month: 12,
+      year: 35,
+      lifetime: 70
     }
   },
 
   {
-    id: "read-engine",
+    id: "redengine",
     name: "Read Engine",
     image: "cs2.png",
     prices: {
-      "1 Week": 6,
-      "1 Month": 18,
-      "1 Year": 45,
-      "Life Time": 90
+      week: 6,
+      month: 18,
+      year: 45,
+      lifetime: 90
     }
   },
 
@@ -79,10 +86,10 @@ const products = [
     name: "Susano",
     image: "cheats-banner.png",
     prices: {
-      "1 Week": 8,
-      "1 Month": 25,
-      "1 Year": 60,
-      "Life Time": 120
+      week: 8,
+      month: 25,
+      year: 60,
+      lifetime: 120
     }
   },
 
@@ -91,273 +98,243 @@ const products = [
     name: "Thaigo",
     image: "valorant.png",
     prices: {
-      "1 Week": 5,
-      "1 Month": 18,
-      "1 Year": 45,
-      "Life Time": 90
+      week: 5,
+      month: 18,
+      year: 45,
+      lifetime: 90
     }
   }
+
 ];
 
 
-let cart = JSON.parse(
-  localStorage.getItem("shadowshop_cart") || "[]"
-);
+const durationLabels = {
+  week: "1 Week",
+  month: "1 Month",
+  year: "1 Year",
+  lifetime: "Life Time"
+};
 
 
-// ELEMENTS
+/* =========================================================
+   STATE
+   ========================================================= */
 
-const fivemCategory =
-  document.getElementById("fivemCategory");
-
-const fivemStore =
-  document.getElementById("fivemStore");
-
-const fivemGrid =
-  document.getElementById("fivemGrid");
-
-const backToProducts =
-  document.getElementById("backToProducts");
-
-const exploreProducts =
-  document.getElementById("exploreProducts");
-
-const cartButton =
-  document.getElementById("cartButton");
-
-const mobileCartButton =
-  document.getElementById("mobileCartButton");
-
-const closeCart =
-  document.getElementById("closeCart");
-
-const cartPanel =
-  document.getElementById("cartPanel");
-
-const overlay =
-  document.getElementById("overlay");
-
-const cartItems =
-  document.getElementById("cartItems");
-
-const cartEmpty =
-  document.getElementById("cartEmpty");
-
-const cartTotal =
-  document.getElementById("cartTotal");
-
-const cartCount =
-  document.getElementById("cartCount");
-
-const mobileCartCount =
-  document.getElementById("mobileCartCount");
-
-const checkoutButton =
-  document.getElementById("checkoutButton");
-
-const accountButton =
-  document.getElementById("accountButton");
-
-const mobileAccountButton =
-  document.getElementById("mobileAccountButton");
-
-const mobileHomeButton =
-  document.getElementById("mobileHomeButton");
-
-const authOverlay =
-  document.getElementById("authOverlay");
-
-const authClose =
-  document.getElementById("authClose");
-
-const authForm =
-  document.getElementById("authForm");
-
-const authEmail =
-  document.getElementById("authEmail");
-
-const authPassword =
-  document.getElementById("authPassword");
-
-const authSubmit =
-  document.getElementById("authSubmit");
-
-const authTitle =
-  document.getElementById("authTitle");
-
-const authSubtitle =
-  document.getElementById("authSubtitle");
-
-const authSwitch =
-  document.getElementById("authSwitch");
-
-const authSwitchText =
-  document.getElementById("authSwitchText");
-
-const authMessage =
-  document.getElementById("authMessage");
-
-const accountPanel =
-  document.getElementById("accountPanel");
-
-const accountEmail =
-  document.getElementById("accountEmail");
-
-const logoutButton =
-  document.getElementById("logoutButton");
-
-const toast =
-  document.getElementById("toast");
-
-
-// AUTH MODE
+let cart =
+  JSON.parse(
+    localStorage.getItem("shadow_cart") || "[]"
+  );
 
 let authMode = "login";
 
+let currentUser = null;
 
-// PRODUCTS RENDER
 
-function renderProducts() {
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
-  fivemGrid.innerHTML = "";
-
-  products.forEach(product => {
-
-    const durations =
-      Object.keys(product.prices);
-
-    const card =
-      document.createElement("div");
-
-    card.className = "product-card";
-
-    card.innerHTML = `
-      <img
-        class="product-image"
-        src="${product.image}"
-        alt="${product.name}"
-      >
-
-      <div class="product-body">
-
-        <h3>${product.name}</h3>
-
-        <p>
-          FiveM product
-        </p>
-
-        <select class="duration-select">
-
-          ${durations.map(duration => `
-            <option value="${duration}">
-              ${duration} — $${product.prices[duration]}
-            </option>
-          `).join("")}
-
-        </select>
-
-        <div class="product-bottom">
-
-          <span class="product-price">
-            $${product.prices[durations[0]]}
-          </span>
-
-          <button
-            class="add-cart-btn"
-            data-id="${product.id}"
-          >
-            Add to Cart
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-    const select =
-      card.querySelector(".duration-select");
-
-    const price =
-      card.querySelector(".product-price");
-
-    select.addEventListener("change", () => {
-
-      price.textContent =
-        "$" + product.prices[select.value];
-
-    });
-
-    card
-      .querySelector(".add-cart-btn")
-      .addEventListener("click", () => {
-
-        addToCart(
-          product,
-          select.value
-        );
-
-      });
-
-    fivemGrid.appendChild(card);
-
-  });
+function $(id) {
+  return document.getElementById(id);
 }
 
 
-// CATEGORY
-
-fivemCategory.addEventListener(
-  "click",
-  () => {
-
-    fivemStore.classList.add("visible");
-
-    fivemStore.scrollIntoView({
-      behavior: "smooth"
-    });
-
-  }
-);
+function money(value) {
+  return "$" + Number(value).toFixed(2);
+}
 
 
-backToProducts.addEventListener(
-  "click",
-  () => {
+function toast(message) {
 
-    fivemStore.classList.remove("visible");
+  const element = $("toast");
 
-    document
-      .getElementById("categories")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
+  if (!element) return;
 
-  }
-);
+  element.textContent = message;
 
+  element.classList.add("show");
 
-exploreProducts.addEventListener(
-  "click",
-  () => {
+  clearTimeout(window.shadowToast);
 
-    document
-      .getElementById("categories")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
+  window.shadowToast =
+    setTimeout(() => {
 
-  }
-);
+      element.classList.remove("show");
+
+    }, 2600);
+}
 
 
-// CART
+/* =========================================================
+   CART
+   ========================================================= */
 
 function saveCart() {
 
   localStorage.setItem(
-    "shadowshop_cart",
+    "shadow_cart",
     JSON.stringify(cart)
   );
+
+  renderCart();
+}
+
+
+function renderCart() {
+
+  const itemsElement =
+    $("cartItems");
+
+  const emptyElement =
+    $("cartEmpty");
+
+  if (!itemsElement || !emptyElement)
+    return;
+
+
+  const count =
+    cart.reduce(
+      (total, item) =>
+        total + item.qty,
+      0
+    );
+
+
+  $("cartCount").textContent =
+    count;
+
+  $("mobileCartCount").textContent =
+    count;
+
+
+  if (cart.length === 0) {
+
+    itemsElement.innerHTML = "";
+
+    emptyElement.style.display =
+      "block";
+
+    $("cartTotal").textContent =
+      "$0.00";
+
+    return;
+  }
+
+
+  emptyElement.style.display =
+    "none";
+
+
+  let total = 0;
+
+
+  itemsElement.innerHTML =
+    cart.map(
+      (item, index) => {
+
+        total +=
+          item.price * item.qty;
+
+        return `
+
+          <div class="cart-item">
+
+            <img
+              src="${item.image}"
+              alt="${item.name}"
+            >
+
+            <div>
+
+              <div class="cart-item-title">
+                ${item.name}
+                ·
+                ${item.duration}
+              </div>
+
+              <div class="cart-item-price">
+                ${money(item.price)}
+                ×
+                ${item.qty}
+              </div>
+
+            </div>
+
+            <div class="qty">
+
+              <button
+                data-minus="${index}">
+                −
+              </button>
+
+              <span>
+                ${item.qty}
+              </span>
+
+              <button
+                data-plus="${index}">
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+      }
+    ).join("");
+
+
+  $("cartTotal").textContent =
+    money(total);
+
+
+  itemsElement
+    .querySelectorAll("[data-minus]")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        const index =
+          Number(
+            button.dataset.minus
+          );
+
+        cart[index].qty--;
+
+        if (
+          cart[index].qty <= 0
+        ) {
+
+          cart.splice(index, 1);
+
+        }
+
+        saveCart();
+
+      };
+
+    });
+
+
+  itemsElement
+    .querySelectorAll("[data-plus]")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        const index =
+          Number(
+            button.dataset.plus
+          );
+
+        cart[index].qty++;
+
+        saveCart();
+
+      };
+
+    });
 
 }
 
@@ -367,342 +344,406 @@ function addToCart(
   duration
 ) {
 
-  const item = {
-    id: Date.now(),
-    productId: product.id,
-    name: product.name,
-    duration: duration,
-    price: product.prices[duration]
-  };
-
-  cart.push(item);
-
-  saveCart();
-
-  renderCart();
-
-  showToast(
-    `${product.name} added to cart`
-  );
-
-}
+  const price =
+    product.prices[duration];
 
 
-function removeFromCart(id) {
-
-  cart =
-    cart.filter(item => item.id !== id);
-
-  saveCart();
-
-  renderCart();
-
-}
+  const key =
+    product.id + "-" + duration;
 
 
-function renderCart() {
+  const existing =
+    cart.find(
+      item => item.key === key
+    );
 
-  cartItems.innerHTML = "";
 
-  if (cart.length === 0) {
+  if (existing) {
 
-    cartEmpty.style.display = "block";
+    existing.qty++;
 
   } else {
 
-    cartEmpty.style.display = "none";
+    cart.push({
 
-    cart.forEach(item => {
+      key,
 
-      const div =
-        document.createElement("div");
+      id: product.id,
 
-      div.className = "cart-item";
+      name: product.name,
 
-      div.innerHTML = `
-        <div>
-          <h4>${item.name}</h4>
+      duration:
+        durationLabels[duration],
 
-          <small>
-            ${item.duration}
-          </small>
-        </div>
+      price,
 
-        <div>
-          <strong>
-            $${item.price}
-          </strong>
+      image: product.image,
 
-          <button
-            class="remove-cart"
-            data-id="${item.id}"
-          >
-            ×
-          </button>
-        </div>
-      `;
-
-      div
-        .querySelector(".remove-cart")
-        .addEventListener(
-          "click",
-          () => removeFromCart(item.id)
-        );
-
-      cartItems.appendChild(div);
+      qty: 1
 
     });
 
   }
 
 
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum + Number(item.price),
-      0
-    );
+  saveCart();
 
-  cartTotal.textContent =
-    total.toFixed(2);
-
-  cartCount.textContent =
-    cart.length;
-
-  mobileCartCount.textContent =
-    cart.length;
+  toast(
+    product.name +
+    " added to cart"
+  );
 
 }
 
+
+/* =========================================================
+   PRODUCTS
+   ========================================================= */
+
+function renderProducts() {
+
+  const grid =
+    $("fivemGrid");
+
+  if (!grid) return;
+
+
+  grid.innerHTML =
+    products.map(
+      product => `
+
+        <article class="product-card">
+
+          <img
+            class="product-image"
+            src="${product.image}"
+            alt="${product.name}"
+          >
+
+          <div class="product-info">
+
+            <div class="product-category">
+              FiveM Product
+            </div>
+
+            <h3 class="product-title">
+              ${product.name}
+            </h3>
+
+            <div class="price-list">
+
+              ${Object.keys(durationLabels)
+                .map(
+                  duration => `
+
+                    <div class="price-option">
+
+                      <span>
+                        ${durationLabels[duration]}
+                      </span>
+
+                      <strong>
+                        ${money(
+                          product.prices[duration]
+                        )}
+                      </strong>
+
+                    </div>
+
+                  `
+                )
+                .join("")}
+
+            </div>
+
+
+            <select
+              class="duration-select"
+              data-duration="${product.id}"
+              style="
+                width:100%;
+                margin-bottom:10px;
+                padding:10px;
+                border-radius:9px;
+                background:#09080d;
+                color:white;
+                border:1px solid rgba(255,255,255,.1);
+              "
+            >
+
+              ${Object.keys(durationLabels)
+                .map(
+                  duration => `
+
+                    <option
+                      value="${duration}"
+                    >
+                      ${durationLabels[duration]}
+                      —
+                      ${money(
+                        product.prices[duration]
+                      )}
+                    </option>
+
+                  `
+                )
+                .join("")}
+
+            </select>
+
+
+            <button
+              class="buy-product"
+              data-product="${product.id}"
+              type="button"
+            >
+              Add to Cart
+            </button>
+
+          </div>
+
+        </article>
+
+      `
+    ).join("");
+
+
+  grid
+    .querySelectorAll("[data-product]")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        const product =
+          products.find(
+            item =>
+              item.id ===
+              button.dataset.product
+          );
+
+
+        const select =
+          grid.querySelector(
+            `[data-duration="${product.id}"]`
+          );
+
+
+        const duration =
+          select.value;
+
+
+        addToCart(
+          product,
+          duration
+        );
+
+      };
+
+    });
+
+}
+
+
+/* =========================================================
+   CART OPEN / CLOSE
+   ========================================================= */
 
 function openCart() {
 
-  cartPanel.classList.add("active");
+  $("cartPanel")
+    .classList.add("open");
 
-  overlay.classList.add("active");
-
-}
-
-
-function closeCartPanel() {
-
-  cartPanel.classList.remove("active");
-
-  overlay.classList.remove("active");
+  $("overlay")
+    .classList.add("show");
 
 }
 
 
-cartButton.addEventListener(
-  "click",
-  openCart
-);
+function closeCart() {
 
-mobileCartButton.addEventListener(
-  "click",
-  openCart
-);
+  $("cartPanel")
+    .classList.remove("open");
 
-closeCart.addEventListener(
-  "click",
-  closeCartPanel
-);
+  $("overlay")
+    .classList.remove("show");
 
-overlay.addEventListener(
-  "click",
-  closeCartPanel
-);
+}
 
 
-// AUTH
+/* =========================================================
+   AUTH
+   ========================================================= */
 
-function openAuth(mode = "login") {
+function openAuth(
+  mode = "login"
+) {
 
   authMode = mode;
 
-  authOverlay.classList.add("active");
 
-  authMessage.textContent = "";
+  $("authTitle").textContent =
+    mode === "login"
+      ? "Login"
+      : "Create Account";
 
-  if (mode === "login") {
 
-    authTitle.textContent =
-      "Login";
+  $("authSubtitle").textContent =
+    mode === "login"
+      ? "Login to your account."
+      : "Create your ShadowShop account.";
 
-    authSubtitle.textContent =
-      "Login to your account.";
 
-    authSubmit.textContent =
-      "Login";
+  $("authSubmit").textContent =
+    mode === "login"
+      ? "Login"
+      : "Create Account";
 
-    authSwitchText.textContent =
-      "Don't have an account?";
 
-    authSwitch.textContent =
-      "Create Account";
+  $("authSwitchText").textContent =
+    mode === "login"
+      ? "Don't have an account?"
+      : "Already have an account?";
 
-  } else {
 
-    authTitle.textContent =
-      "Create Account";
+  $("authSwitch").textContent =
+    mode === "login"
+      ? "Sign Up"
+      : "Login";
 
-    authSubtitle.textContent =
-      "Create your ShadowShop account.";
 
-    authSubmit.textContent =
-      "Create Account";
+  $("authMessage").textContent =
+    "";
 
-    authSwitchText.textContent =
-      "Already have an account?";
+  $("authMessage").className =
+    "auth-message";
 
-    authSwitch.textContent =
-      "Login";
 
-  }
+  $("authOverlay")
+    .classList.add("show");
 
 }
 
 
 function closeAuth() {
 
-  authOverlay.classList.remove("active");
+  $("authOverlay")
+    .classList.remove("show");
 
 }
 
 
-accountButton.addEventListener(
-  "click",
-  async () => {
+/* =========================================================
+   USER
+   ========================================================= */
 
-    const {
-      data
-    } = await supabaseClient.auth.getUser();
+async function refreshUser() {
 
-    if (data.user) {
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth
+      .getUser();
 
-      accountEmail.textContent =
-        data.user.email;
 
-      accountPanel.classList.toggle(
-        "active"
-      );
+  if (error) {
 
-    } else {
+    currentUser = null;
 
-      openAuth("login");
-
-    }
+    return;
 
   }
-);
 
 
-mobileAccountButton.addEventListener(
-  "click",
-  async () => {
+  currentUser =
+    data?.user || null;
 
-    const {
-      data
-    } = await supabaseClient.auth.getUser();
 
-    if (data.user) {
+  if (currentUser) {
 
-      accountEmail.textContent =
-        data.user.email;
-
-      accountPanel.classList.toggle(
-        "active"
-      );
-
-    } else {
-
-      openAuth("login");
-
-    }
+    $("accountEmail").textContent =
+      currentUser.email || "";
 
   }
-);
+
+}
 
 
-authClose.addEventListener(
-  "click",
-  closeAuth
-);
+/* =========================================================
+   LOGIN / SIGN UP
+   ========================================================= */
+
+async function submitAuth(event) {
+
+  event.preventDefault();
 
 
-authSwitch.addEventListener(
-  "click",
-  () => {
+  const email =
+    $("authEmail")
+      .value
+      .trim();
 
-    if (authMode === "login") {
 
-      openAuth("signup");
+  const password =
+    $("authPassword")
+      .value;
 
-    } else {
 
-      openAuth("login");
+  const message =
+    $("authMessage");
 
-    }
+
+  if (!email) {
+
+    message.textContent =
+      "Please enter your email.";
+
+    message.className =
+      "auth-message error";
+
+    return;
 
   }
-);
 
 
-// LOGIN / SIGNUP
+  if (password.length < 6) {
 
-authForm.addEventListener(
-  "submit",
-  async event => {
+    message.textContent =
+      "Password must contain at least 6 characters.";
 
-    event.preventDefault();
+    message.className =
+      "auth-message error";
 
-    const email =
-      authEmail.value.trim();
+    return;
 
-    const password =
-      authPassword.value;
-
-    authSubmit.disabled = true;
-
-    authMessage.textContent =
-      "Please wait...";
+  }
 
 
-    try {
-
-      if (authMode === "login") {
-
-        const {
-          error
-        } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
-
-        if (error) {
-          throw error;
-        }
-
-        authMessage.textContent =
-          "Login successful.";
-
-        setTimeout(() => {
-
-          closeAuth();
-
-        }, 700);
+  $("authSubmit").disabled =
+    true;
 
 
-      } else {
+  $("authSubmit").textContent =
+    "Please wait...";
 
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth.signUp({
+
+  try {
+
+    /* ================= SIGN UP ================= */
+
+    if (
+      authMode === "signup"
+    ) {
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .signUp({
 
             email,
+
             password,
 
             options: {
@@ -715,159 +756,362 @@ authForm.addEventListener(
 
           });
 
-        if (error) {
-          throw error;
-        }
+
+      if (error)
+        throw error;
 
 
-        if (data.session) {
+      if (data?.session) {
 
-          authMessage.textContent =
-            "Account created successfully.";
+        message.textContent =
+          "Account created successfully.";
 
-        } else {
+        message.className =
+          "auth-message success";
 
-          authMessage.textContent =
-            "Account created. Check your email to confirm your account.";
 
-        }
+        await refreshUser();
+
+
+        setTimeout(
+          closeAuth,
+          800
+        );
+
+      } else {
+
+        message.textContent =
+          "Account created. Check your email to confirm your account.";
+
+        message.className =
+          "auth-message success";
 
       }
 
-    } catch (error) {
-
-      authMessage.textContent =
-        error.message || "Something went wrong.";
 
     }
 
+    /* ================= LOGIN ================= */
 
-    authSubmit.disabled = false;
+    else {
 
-  }
-);
+      const {
+        error
+      } =
+        await supabaseClient.auth
+          .signInWithPassword({
 
+            email,
 
-// LOGOUT
+            password
 
-logoutButton.addEventListener(
-  "click",
-  async () => {
-
-    await supabaseClient.auth.signOut();
-
-    accountPanel.classList.remove(
-      "active"
-    );
-
-    showToast(
-      "Logged out successfully"
-    );
-
-  }
-);
+          });
 
 
-// CHECKOUT
+      if (error)
+        throw error;
 
-checkoutButton.addEventListener(
-  "click",
-  async () => {
 
-    if (cart.length === 0) {
+      message.textContent =
+        "Login successful.";
 
-      showToast(
-        "Your cart is empty"
+      message.className =
+        "auth-message success";
+
+
+      await refreshUser();
+
+
+      setTimeout(
+        closeAuth,
+        600
       );
 
-      return;
-
     }
 
 
-    const {
-      data
-    } =
-      await supabaseClient.auth.getUser();
+  } catch (error) {
 
-
-    if (!data.user) {
-
-      closeCartPanel();
-
-      openAuth("login");
-
-      return;
-
-    }
-
-
-    showToast(
-      "Checkout will be connected next."
+    console.error(
+      "AUTH ERROR:",
+      error
     );
 
+
+    /*
+      IMPORTANT:
+      Show the real Supabase error
+      instead of only "Failed".
+    */
+
+    message.textContent =
+      error?.message ||
+      "Something went wrong.";
+
+
+    message.className =
+      "auth-message error";
+
+
+  } finally {
+
+    $("authSubmit").disabled =
+      false;
+
+
+    $("authSubmit").textContent =
+      authMode === "login"
+        ? "Login"
+        : "Create Account";
+
   }
-);
-
-
-// MOBILE HOME
-
-mobileHomeButton.addEventListener(
-  "click",
-  () => {
-
-    document
-      .getElementById("home")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
-  }
-);
-
-
-// TOAST
-
-let toastTimer;
-
-function showToast(message) {
-
-  toast.textContent = message;
-
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-
-  toastTimer =
-    setTimeout(() => {
-
-      toast.classList.remove(
-        "show"
-      );
-
-    }, 2500);
 
 }
 
 
-// INIT
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+$("accountButton").onclick =
+  () => {
+
+    if (!currentUser) {
+
+      openAuth("login");
+
+    } else {
+
+      $("accountPanel")
+        .classList.toggle("show");
+
+    }
+
+  };
+
+
+$("mobileAccountButton").onclick =
+  () => {
+
+    if (!currentUser) {
+
+      openAuth("login");
+
+    } else {
+
+      $("accountPanel")
+        .classList.toggle("show");
+
+    }
+
+  };
+
+
+$("cartButton").onclick =
+  openCart;
+
+
+$("mobileCartButton").onclick =
+  openCart;
+
+
+$("closeCart").onclick =
+  closeCart;
+
+
+$("overlay").onclick =
+  closeCart;
+
+
+$("authClose").onclick =
+  closeAuth;
+
+
+$("authSwitch").onclick =
+  () => {
+
+    openAuth(
+      authMode === "login"
+        ? "signup"
+        : "login"
+    );
+
+  };
+
+
+$("authForm").addEventListener(
+  "submit",
+  submitAuth
+);
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+$("logoutButton").onclick =
+  async () => {
+
+    const {
+      error
+    } =
+      await supabaseClient.auth
+        .signOut();
+
+
+    if (error) {
+
+      toast(
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    currentUser = null;
+
+
+    $("accountPanel")
+      .classList.remove("show");
+
+
+    toast(
+      "Logged out successfully"
+    );
+
+  };
+
+
+/* =========================================================
+   FIVEM CATEGORY
+   ========================================================= */
+
+$("fivemCategory").onclick =
+  () => {
+
+    $("fivemStore")
+      .classList.add("visible");
+
+
+    $("fivemStore")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+  };
+
+
+$("backToProducts").onclick =
+  () => {
+
+    $("fivemStore")
+      .classList.remove("visible");
+
+
+    $("categories")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+  };
+
+
+/* =========================================================
+   EXPLORE BUTTON
+   ========================================================= */
+
+$("exploreProducts").onclick =
+  () => {
+
+    $("fivemStore")
+      .classList.add("visible");
+
+
+    $("fivemStore")
+      .scrollIntoView({
+        behavior:"smooth"
+      });
+
+  };
+
+
+/* =========================================================
+   MOBILE HOME
+   ========================================================= */
+
+$("mobileHomeButton").onclick =
+  () => {
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  };
+
+
+$("mobileMenuButton").onclick =
+  () => {
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  };
+
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+$("checkoutButton").onclick =
+  () => {
+
+    if (!currentUser) {
+
+      closeCart();
+
+      openAuth("login");
+
+      toast(
+        "Login first to continue"
+      );
+
+      return;
+
+    }
+
+
+    toast(
+      "Checkout will be connected next."
+    );
+
+  };
+
+
+/* =========================================================
+   SUPABASE AUTH STATE
+   ========================================================= */
+
+supabaseClient.auth
+  .onAuthStateChange(
+    async () => {
+
+      await refreshUser();
+
+    }
+  );
+
+
+/* =========================================================
+   START
+   ========================================================= */
 
 renderProducts();
 
 renderCart();
 
-
-// SUPABASE SESSION
-
-supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
-
-    if (session?.user) {
-
-      accountEmail.textContent =
-        session.user.email;
-
-    }
-
-  }
-);
+refreshUser();
