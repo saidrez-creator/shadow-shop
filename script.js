@@ -22,9 +22,9 @@ const supabaseClient =
 const products = [
 
   {
-    id: "7tz",
-    name: "7 TZ",
-    image: "fivem.png",
+    id: "tz",
+    name: "TZ",
+    image: "tz.png",
     prices: {
       week: 5,
       month: 15,
@@ -36,7 +36,7 @@ const products = [
   {
     id: "tzx",
     name: "TZX",
-    image: "fivem-banner.png",
+    image: "tzx.png",
     prices: {
       week: 7,
       month: 20,
@@ -48,7 +48,7 @@ const products = [
   {
     id: "vanity",
     name: "Vanity",
-    image: "banner.jpg",
+    image: "vanity.png",
     prices: {
       week: 5,
       month: 15,
