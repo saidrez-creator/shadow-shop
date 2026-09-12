@@ -50,10 +50,10 @@ const products = [
     name: "Vanity",
     image: "vanity.png",
     prices: {
-      week: 5,
-      month: 15,
-      year: 45,
-      lifetime: 90
+      week: 10,
+      month: 20,
+      year: 50,
+      lifetime: 50
     }
   },
 
@@ -62,10 +62,10 @@ const products = [
     name: "macho",
     image: "macho.png",
     prices: {
-      week: 4,
+      week: 10,
       month: 12,
       year: 35,
-      lifetime: 70
+      lifetime: 50
     }
   },
 
@@ -77,7 +77,7 @@ const products = [
       week: 6,
       month: 18,
       year: 45,
-      lifetime: 90
+      lifetime: 50
     }
   },
 
@@ -89,7 +89,7 @@ const products = [
       week: 8,
       month: 25,
       year: 60,
-      lifetime: 120
+      lifetime: 50
     }
   },
 
@@ -101,7 +101,7 @@ const products = [
       week: 5,
       month: 18,
       year: 45,
-      lifetime: 90
+      lifetime: 50
     }
   }
 
