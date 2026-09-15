@@ -1381,3 +1381,223 @@ footer{
 .stock-info span {
   letter-spacing: .3px;
 }
+/* =========================================================
+   CART FIX - MOBILE + DESKTOP
+   ========================================================= */
+
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+
+  width: min(520px, 92vw);
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+
+  overflow: hidden;
+}
+
+
+/* CART HEADER */
+
+.cart-panel .panel-header {
+  flex-shrink: 0;
+}
+
+
+/* CART ITEMS */
+
+.cart-panel .cart-items {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 24px 24px 20px;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* CART FOOTER */
+
+.cart-panel .cart-footer {
+  flex-shrink: 0;
+
+  position: relative;
+
+  padding: 18px 24px 24px;
+
+  background: #0b0911;
+
+  border-top: 1px solid rgba(255,255,255,.08);
+
+  z-index: 5;
+}
+
+
+/* CHECKOUT */
+
+.cart-panel #checkoutButton {
+  width: 100%;
+  min-height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 14px;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+
+/* DISCORD INFO */
+
+.cart-panel .cart-footer::after {
+  content: "You will be redirected to Discord to complete your order.";
+
+  display: block;
+
+  margin-top: 10px;
+
+  text-align: center;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  color: rgba(255,255,255,.55);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .cart-panel {
+
+    width: 100%;
+    max-width: 100%;
+
+    right: 0;
+    left: auto;
+
+    height: 100dvh;
+
+    border-radius: 0;
+
+  }
+
+
+  .cart-panel .panel-header {
+
+    padding:
+      24px
+      20px
+      20px;
+
+  }
+
+
+  .cart-panel .cart-items {
+
+    padding:
+      20px
+      18px
+      18px;
+
+  }
+
+
+  .cart-panel .cart-footer {
+
+    padding:
+      14px
+      18px
+      calc(90px + env(safe-area-inset-bottom));
+
+  }
+
+
+  .cart-panel #checkoutButton {
+
+    min-height: 56px;
+
+    font-size: 17px;
+
+  }
+
+
+  .cart-panel .total-row {
+
+    font-size: 20px;
+
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .cart-panel .cart-items {
+
+    padding-left: 12px;
+    padding-right: 12px;
+
+  }
+
+
+  .cart-panel .cart-footer {
+
+    padding-left: 12px;
+    padding-right: 12px;
+
+  }
+
+
+  .cart-panel #checkoutButton {
+
+    min-height: 52px;
+
+  }
+
+}
+
+
+/* =========================================================
+   BOTTOM MOBILE BAR
+   ========================================================= */
+
+.mobile-bottom-bar {
+
+  z-index: 900;
+
+}
+
+
+/* When cart is open, keep cart above bottom bar */
+
+.cart-panel.open {
+
+  z-index: 1100;
+
+}
+
+.overlay {
+
+  z-index: 1050;
+
+}
