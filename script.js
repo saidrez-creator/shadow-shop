@@ -30,10 +30,10 @@ const products = [
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   },
 
@@ -43,17 +43,17 @@ const products = [
     image: "tzx.png",
 
     prices: {
-      week: 5,
-      month: 20,
-      year: 35,
+      week: 10,
+      month: 15,
+      year: 20,
       lifetime: 35
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   },
 
@@ -65,15 +65,15 @@ const products = [
     prices: {
       week: 10,
       month: 20,
-      year: 50,
-      lifetime: 50
+      year: 29,
+      lifetime: 29
     },
 
     stock: {
-      week: 10,
-      month: 5,
+      week: 3,
+      month: 3,
       year: 3,
-      lifetime: 2
+      lifetime: 3
     }
   },
 
@@ -90,10 +90,10 @@ const products = [
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   },
 
@@ -110,10 +110,10 @@ const products = [
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   },
 
@@ -130,10 +130,10 @@ const products = [
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   },
 
@@ -150,10 +150,10 @@ const products = [
     },
 
     stock: {
-      week: 10,
-      month: 5,
-      year: 3,
-      lifetime: 2
+      week: 0,
+      month: 0,
+      year: 0,
+      lifetime: 0
     }
   }
 
