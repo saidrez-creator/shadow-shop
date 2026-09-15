@@ -1346,3 +1346,38 @@ footer{
   transform: translateY(-2px);
   filter: brightness(1.1);
 }
+/* =========================================================
+   STOCK
+   ========================================================= */
+
+.stock-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -4px 0 8px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.stock-info small {
+  font-size: 11px;
+  opacity: .8;
+}
+
+.stock-info.in-stock {
+  color: #72ff9b;
+  background: rgba(60, 255, 120, .08);
+  border: 1px solid rgba(60, 255, 120, .18);
+}
+
+.stock-info.out-stock {
+  color: #ff5f6d;
+  background: rgba(255, 60, 80, .08);
+  border: 1px solid rgba(255, 60, 80, .18);
+}
+
+.stock-info span {
+  letter-spacing: .3px;
+}
